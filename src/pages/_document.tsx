@@ -4,11 +4,12 @@ import Script from 'next/script'
 export default function Document() {
   return (
     <Html lang="ko">
-      <Head />
-      <meta
-        name="google-site-verification"
-        content="lHn_s81CXWaqZTUdhxI4BQr_qvnDwPIdDWul43__rd8"
-      />
+      <Head>
+        <meta
+          name="google-site-verification"
+          content="lHn_s81CXWaqZTUdhxI4BQr_qvnDwPIdDWul43__rd8"
+        />
+      </Head>
       <body>
         <Script
           strategy="beforeInteractive"
