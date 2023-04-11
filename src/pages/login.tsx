@@ -1,6 +1,6 @@
+import styled from '@emotion/styled'
 import { Loader } from '@mantine/core'
 import SignIn from 'components/Signin'
-import { Center_Div } from 'components/styledComponent'
 import { useSession } from 'next-auth/react'
 import { useEffect } from 'react'
 
@@ -22,10 +22,21 @@ export default function Login() {
       {status === 'unauthenticated' ? (
         <SignIn />
       ) : (
-        <Center_Div style={{ width: '1000px', margin: '400px 0 400px 0' }}>
+        <Center_Div
+          style={{
+            width: '1000px',
+            margin: '400px 0 400px 0',
+          }}
+        >
           <Loader color="dark" />
         </Center_Div>
       )}
     </>
   )
 }
+
+export const Center_Div = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`

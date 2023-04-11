@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
   CustomOverlayMap,
   Map,
@@ -43,17 +43,28 @@ export default function Rooms() {
   const [category, setCategory] = useState<string>('0')
   const [ym, setYm] = useState<string>('0')
   const [filter, setFilter] = useState<string>(FILTERS[0].value)
-  const [keyword, setKeyword] = useState<string>(String(router.query.keyword))
-  const [search, setSearch] = useState<string>(String(router.query.keyword))
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setKeyword(e.target.value)
-  }
+  const searchRef = useRef<HTMLInputElement | null>(null)
+
+  // const [keyword, setKeyword] = useState<string>('')
+  const [search, setSearch] = useState<string | null>(() =>
+    router.query.keyword ? String(router.query.keyword) : null
+  )
+
+  // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setKeyword(e.target.value)
+  // }
   const handleEnterKeypress = (e: React.KeyboardEvent) => {
     if (e.key == 'Enter') {
-      setSearch(keyword)
-      router.replace(`/rooms?keyword=${keyword}`, `/rooms?keyword=${keyword}`, {
-        shallow: true,
-      })
+      if (searchRef.current) {
+        setSearch(searchRef.current.value)
+        // router.replace(
+        //   `/rooms?keyword=${searchRef.current.value}`,
+        //   `/rooms?keyword=${searchRef.current.value}`,
+        //   {
+        //     shallow: true,
+        //   }
+        // )
+      }
     }
   }
 
@@ -117,25 +128,13 @@ export default function Rooms() {
     { wishlists: number[] },
     unknown,
     number[]
-  >([WISHLISTS_QUERY_KEY], () =>
-    fetch(WISHLISTS_QUERY_KEY)
-      .then((res) => res.json())
-      .then((data) => data.items)
-  )
-
-  useEffect(() => {
-    if (!rooms || !search || !map) return
-
-    const ps = new kakao.maps.services.Places()
-
-    ps.keywordSearch(search, (data, status, _pagination) => {
-      if (status === kakao.maps.services.Status.OK) {
-        setOverlay({ id: undefined, isOpened: false })
-        setCenter({ lat: Number(data[0].y), lng: Number(data[0].x) }) //가장 연관된 keyword 주소를 센터로
-        map.setLevel(5)
-      }
-    })
-  }, [search, map, rooms])
+  >({
+    queryKey: [WISHLISTS_QUERY_KEY],
+    queryFn: () =>
+      fetch(WISHLISTS_QUERY_KEY)
+        .then((res) => res.json())
+        .then((data) => data.items),
+  })
 
   const { mutate: updateIsWished } = useMutation<unknown, unknown, number, any>(
     (room_id) =>
@@ -147,9 +146,7 @@ export default function Rooms() {
         .then((res) => res.items),
     {
       onMutate: async (room_id) => {
-        await queryClient.cancelQueries({
-          queryKey: [WISHLISTS_QUERY_KEY],
-        })
+        await queryClient.cancelQueries([WISHLISTS_QUERY_KEY])
         const previous = queryClient.getQueryData([WISHLISTS_QUERY_KEY])
 
         queryClient.setQueryData<number[]>([WISHLISTS_QUERY_KEY], (old) =>
@@ -165,10 +162,32 @@ export default function Rooms() {
         queryClient.setQueryData([WISHLISTS_QUERY_KEY], context.previous)
       },
       onSuccess: async () => {
+        console.log('heart updated')
         queryClient.invalidateQueries([WISHLISTS_QUERY_KEY])
       },
     }
   )
+  useEffect(() => {
+    if (!router.query.keyword) return
+    search === null && setSearch(String(router.query.keyword))
+  })
+
+  useEffect(() => {
+    if (!rooms || !search || !map) return
+    const ps = new kakao.maps.services.Places()
+
+    ps.keywordSearch(search, (data, status, _pagination) => {
+      if (status === kakao.maps.services.Status.OK) {
+        console.log('search success : ', search)
+        setOverlay({ id: undefined, isOpened: false })
+        setCenter({ lat: Number(data[0].y), lng: Number(data[0].x) }) //가장 연관된 keyword 주소를 센터로
+        map.setLevel(5)
+      } else {
+        console.log('search failed')
+        return
+      }
+    })
+  }, [rooms, search, map])
 
   function heartCheck(
     room_id: number,
@@ -323,8 +342,9 @@ export default function Rooms() {
           <IconSearch size={18} />
           <Home_Input
             style={{ fontSize: '16px' }}
-            value={keyword === 'undefined' ? '' : keyword}
-            onChange={handleChange}
+            // onChange={handleChange}
+            // value={keyword}
+            ref={searchRef}
             placeholder="주소나 건물명을 입력하세요"
             onKeyUp={handleEnterKeypress}
           />

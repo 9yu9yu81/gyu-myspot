@@ -158,7 +158,6 @@ export default function RoomIndex(room: RoomAllData) {
       onMutate: async () => {
         await queryClient.cancelQueries({ queryKey: [ISWISHED_QUERY_KEY] })
         const previous = queryClient.getQueryData([ISWISHED_QUERY_KEY])
-
         queryClient.setQueryData<boolean>([ISWISHED_QUERY_KEY], (old) => !old)
 
         queryClient.setQueryData<number>([ROOM_WISHED_QUERY_KEY], (old) =>

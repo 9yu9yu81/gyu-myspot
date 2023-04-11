@@ -7,7 +7,7 @@ export default function SignIn() {
   const { status } = useSession()
 
   return (
-    <Center_Div style={{ margin: '20vh 0 20vh 0 ' }}>
+    <Center_Div style={{ margin: '20vh 0 20vh 0 ', width: '1000px' }}>
       {status === 'unauthenticated' && (
         <Center_Div
           style={{
