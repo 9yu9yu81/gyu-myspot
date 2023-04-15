@@ -36,7 +36,7 @@ import CustomSegmentedControl from 'components/CustomSegmentedControl'
 import styled from '@emotion/styled'
 import { Calendar } from '@mantine/dates'
 import CustomCheckBox from 'components/CustomCheckBox'
-import { GetServerSideProps, GetServerSidePropsContext } from 'next'
+import { GetServerSidePropsContext } from 'next'
 import { useRouter } from 'next/router'
 
 const DESCRIPTION_PLACEHOLDER = `[상세설명 작성 주의사항]
@@ -63,11 +63,11 @@ type RoomAllData = Room &
   Omit<AddressInfo, 'id' | 'room_id'> &
   Omit<MoreInfo, 'id' | 'room_id'>
 
-export const getServerSideProps: GetServerSideProps = async (
+export const getServerSideProps = async (
   context: GetServerSidePropsContext
 ) => {
-  const room: Room = await fetch(
-    `${process.env.NEXTAUTH_URL}/api/room/get-Room?id=${context.params?.id}`
+  const room: RoomAllData = await fetch(
+    `${process.env.HOST}/api/room/get-Room?id=${context.params?.id}`
   )
     .then((res) => res.json())
     .then((data) => data.items)

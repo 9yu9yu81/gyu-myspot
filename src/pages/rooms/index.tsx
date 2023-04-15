@@ -162,7 +162,6 @@ export default function Rooms() {
         queryClient.setQueryData([WISHLISTS_QUERY_KEY], context.previous)
       },
       onSuccess: async () => {
-        console.log('heart updated')
         queryClient.invalidateQueries([WISHLISTS_QUERY_KEY])
       },
     }
@@ -178,7 +177,7 @@ export default function Rooms() {
 
     ps.keywordSearch(search, (data, status, _pagination) => {
       if (status === kakao.maps.services.Status.OK) {
-        console.log('search success : ', search)
+        // console.log('search success : ', search)
         setOverlay({ id: undefined, isOpened: false })
         setCenter({ lat: Number(data[0].y), lng: Number(data[0].x) }) //가장 연관된 keyword 주소를 센터로
         map.setLevel(5)
