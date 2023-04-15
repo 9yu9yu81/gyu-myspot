@@ -11,7 +11,6 @@ import { useState } from 'react'
 import Image from 'next/image'
 import { IconHeart } from '@tabler/icons'
 import { useSession } from 'next-auth/react'
-import { RoomAllData } from './rooms/[id]'
 import styled from '@emotion/styled'
 import { useRouter } from 'next/router'
 import dynamic from 'next/dynamic'
@@ -69,7 +68,7 @@ export default function wishlist() {
   const { data: wishlists, isLoading } = useQuery<
     { wishlists: WishedRoom[] },
     unknown,
-    RoomAllData[]
+    WishedRoom[]
   >([WISHLIST_QUERY_KEY], () =>
     fetch(WISHLIST_QUERY_KEY)
       .then((res) => res.json())

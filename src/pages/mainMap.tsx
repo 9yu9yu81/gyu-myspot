@@ -7,7 +7,6 @@ import {
   MarkerClusterer,
   ZoomControl,
 } from 'react-kakao-maps-sdk'
-import { RoomAllData } from './rooms/[id]'
 import styled from '@emotion/styled'
 import Image from 'next/image'
 import {
@@ -47,6 +46,46 @@ export const menuStyle = (state: string, item: number | string) => {
       color: `${state === item ? subColor_light : 'black'}`,
     }
   }
+}
+interface RoomAllData {
+  id: number
+  category_id: number
+  user_id: string
+  status_id: number
+  type_id: number
+  updatedAt: Date
+  title: string
+  description: string
+  views: number
+  wished: number
+  images: string
+  contact: string
+
+  sType_id: number
+  deposit: number
+  fee: number
+
+  supply_area: number
+  area: number
+  total_floor: number
+  floor: number
+  move_in: Date
+  heat_id: number
+
+  name: string
+  doro: string
+  jibun: string
+  detail: string
+  lat: number
+  lng: number
+
+  maintenance_fee: number
+  maintenance_ids?: string
+  elevator: boolean
+  parking: boolean
+  parking_fee: number
+  structure_ids?: string
+  option_ids?: string
 }
 export default function MainMap() {
   const { data: session, status } = useSession()

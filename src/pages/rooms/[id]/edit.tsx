@@ -1,8 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
+import { GetServerSidePropsContext } from 'next'
+import { useRouter } from 'next/router'
+import styled from '@emotion/styled'
 import { Chip, FileButton, Modal } from '@mantine/core'
 import { IconExclamationCircle, IconMapPin } from '@tabler/icons'
-import Map from 'components/MapN'
 import {
   HoverDiv,
   mainColor,
@@ -12,13 +14,6 @@ import {
   subColor_medium,
 } from 'components/styledComponent'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import {
-  AddressInfo,
-  BasicInfo,
-  MoreInfo,
-  Room,
-  SaleInfo,
-} from '@prisma/client'
 import { useSession } from 'next-auth/react'
 import {
   CATEGORY_MAP,
@@ -31,13 +26,14 @@ import {
   getOnlyNumber,
 } from 'constants/const'
 import format from 'date-fns/format'
-import UploadCaveats from 'components/upload/UploadCaveats'
-import CustomSegmentedControl from 'components/CustomSegmentedControl'
-import styled from '@emotion/styled'
+import dynamic from 'next/dynamic'
+const Map = dynamic(import('components/MapN'))
+const UploadCaveats = dynamic(import('components/upload/UploadCaveats'))
+const CustomSegmentedControl = dynamic(
+  import('components/CustomSegmentedControl')
+)
+const CustomCheckBox = dynamic(import('components/CustomCheckBox'))
 import { Calendar } from '@mantine/dates'
-import CustomCheckBox from 'components/CustomCheckBox'
-import { GetServerSidePropsContext } from 'next'
-import { useRouter } from 'next/router'
 
 const DESCRIPTION_PLACEHOLDER = `[상세설명 작성 주의사항]
 - 매물 정보와 관련없는 홍보성 정보는 입력할 수 없습니다.
@@ -48,20 +44,83 @@ const DESCRIPTION_PLACEHOLDER = `[상세설명 작성 주의사항]
 const DETAILADDR_PLACEHOLDER = `상세 주소
 예) e편한세상 101동 1101호`
 
-export interface RoomUploadData {
-  room: Omit<Room, 'user_id' | 'updatedAt' | 'status_id' | 'views' | 'wished'>
-  saleInfo: Omit<SaleInfo, 'id' | 'room_id'>
-  basicInfo: Omit<BasicInfo, 'id' | 'room_id'>
-  addressInfo: Omit<AddressInfo, 'id' | 'room_id'>
-  moreInfo: Omit<MoreInfo, 'id' | 'room_id'>
+interface RoomUploadData {
+  room: {
+    id: number
+    category_id: number
+    type_id: number
+    title: string
+    description: string
+    images: string
+    contact: string
+  }
+  saleInfo: { type_id: number; deposit: number; fee: number }
+  basicInfo: {
+    supply_area: number
+    area: number
+    total_floor: number
+    floor: number
+    move_in: Date
+    heat_id: number
+  }
+  addressInfo: {
+    name: string
+    doro: string
+    jibun: string
+    detail: string
+    lat: number
+    lng: number
+  }
+  moreInfo: {
+    maintenance_fee: number
+    maintenance_ids?: string
+    elevator: boolean
+    parking: boolean
+    parking_fee: number
+    structure_ids?: string
+    option_ids?: string
+  }
 }
-type RoomAllData = Room &
-  Omit<SaleInfo, 'id' | 'room_id' | 'type_id'> & { sType_id: number } & Omit<
-    BasicInfo,
-    'id' | 'room_id'
-  > &
-  Omit<AddressInfo, 'id' | 'room_id'> &
-  Omit<MoreInfo, 'id' | 'room_id'>
+interface RoomAllData {
+  id: number
+  category_id: number
+  user_id: string
+  status_id: number
+  type_id: number
+  updatedAt: Date
+  title: string
+  description: string
+  views: number
+  wished: number
+  images: string
+  contact: string
+
+  sType_id: number
+  deposit: number
+  fee: number
+
+  supply_area: number
+  area: number
+  total_floor: number
+  floor: number
+  move_in: Date
+  heat_id: number
+
+  name: string
+  doro: string
+  jibun: string
+  detail: string
+  lat: number
+  lng: number
+
+  maintenance_fee: number
+  maintenance_ids?: string
+  elevator: boolean
+  parking: boolean
+  parking_fee: number
+  structure_ids?: string
+  option_ids?: string
+}
 
 export const getServerSideProps = async (
   context: GetServerSidePropsContext
@@ -306,16 +365,16 @@ export default function RoomEdit(room: RoomAllData) {
             moreInfo: {
               maintenance_fee: mChecked ? 0 : Number(mFee),
               maintenance_ids:
-                mOption && mOption.length !== 0 ? mOption.join(',') : null,
+                mOption && mOption.length !== 0 ? mOption.join(',') : undefined,
               elevator: Boolean(Number(elevator)),
               parking: Boolean(Number(parking)),
               parking_fee: parking === '0' ? 0 : Number(pFee),
               option_ids:
-                option && option.length !== 0 ? option.join(',') : null,
+                option && option.length !== 0 ? option.join(',') : undefined,
               structure_ids:
                 structure && structure.length !== 0
                   ? structure.join(',')
-                  : null,
+                  : undefined,
             },
           })
     }

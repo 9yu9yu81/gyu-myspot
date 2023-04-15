@@ -1,15 +1,7 @@
 import styled from '@emotion/styled'
 import { Modal } from '@mantine/core'
-import {
-  AddressInfo,
-  BasicInfo,
-  MoreInfo,
-  Room,
-  SaleInfo,
-} from '@prisma/client'
 import { IconChevronLeft, IconChevronRight, IconHeart } from '@tabler/icons'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import MapN from 'components/MapN'
 import {
   StyledImage,
   mainColor,
@@ -34,9 +26,54 @@ import { useSession } from 'next-auth/react'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import Carousel from 'nuka-carousel'
-import { Upload_Btn_Outline } from 'pages/upload'
 import { useEffect, useState } from 'react'
-// import dynamic from 'next/dynamic'
+import dynamic from 'next/dynamic'
+const MapN = dynamic(import('components/MapN'))
+
+interface RoomAllData {
+  id: number
+  category_id: number
+  user_id: string
+  status_id: number
+  type_id: number
+  updatedAt: Date
+  title: string
+  description: string
+  views: number
+  wished: number
+  images: string
+  contact: string
+
+  sType_id: number
+  deposit: number
+  fee: number
+
+  supply_area: number
+  area: number
+  total_floor: number
+  floor: number
+  move_in: Date
+  heat_id: number
+
+  name: string
+  doro: string
+  jibun: string
+  detail: string
+  lat: number
+  lng: number
+
+  maintenance_fee: number
+  maintenance_ids?: string
+  elevator: boolean
+  parking: boolean
+  parking_fee: number
+  structure_ids?: string
+  option_ids?: string
+}
+interface RoomViews {
+  id: number
+  views: number
+}
 
 export const getServerSideProps = async (
   context: GetServerSidePropsContext
@@ -52,14 +89,6 @@ export const getServerSideProps = async (
     },
   }
 }
-
-export type RoomAllData = Room &
-  Omit<SaleInfo, 'id' | 'room_id' | 'type_id'> & { sType_id: number } & Omit<
-    BasicInfo,
-    'id' | 'room_id'
-  > &
-  Omit<AddressInfo, 'id' | 'room_id'> &
-  Omit<MoreInfo, 'id' | 'room_id'>
 
 export default function RoomIndex(room: RoomAllData) {
   const carouselConfig = {
@@ -117,7 +146,7 @@ export default function RoomIndex(room: RoomAllData) {
   const { mutate: increaseViews } = useMutation<
     unknown,
     unknown,
-    Pick<Room, 'id' | 'views'>,
+    RoomViews,
     any
   >((items) =>
     fetch(`/api/room/update-Room-Views`, {
@@ -317,7 +346,7 @@ export default function RoomIndex(room: RoomAllData) {
               <Info_Div1_B>
                 <Info_Div_SubTitle>방 구조</Info_Div_SubTitle>
                 <Info_Div2>
-                  {room.structure_ids.split(',').map((item, idx) => (
+                  {room.structure_ids?.split(',').map((item, idx) => (
                     <div key={idx}>{STRUCTURE_MAP[Number(item) - 1]}</div>
                   ))}
                 </Info_Div2>
@@ -621,4 +650,13 @@ const Card_Img_Container = styled.div`
 const Dark_Btn = styled.button`
   color: ${subColor_lighter};
   background-color: ${mainColor};
+`
+const Upload_Btn_Medium = styled.button`
+  width: 100px;
+  height: 40px;
+  font-size: 12px;
+`
+const Upload_Btn_Outline = styled(Upload_Btn_Medium)`
+  color: ${mainColor};
+  border: 0.5px solid ${subColor_medium};
 `

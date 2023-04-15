@@ -7,7 +7,6 @@ import {
   MarkerClusterer,
   ZoomControl,
 } from 'react-kakao-maps-sdk'
-import { RoomAllData } from './[id]'
 import styled from '@emotion/styled'
 import Image from 'next/image'
 import {
@@ -30,8 +29,51 @@ import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import { Home_Input, Home_Search_Div } from 'pages'
 import { Loader, Menu } from '@mantine/core'
-import CustomPagination from 'components/CustomPagination'
 import { menuStyle } from 'pages/mainMap'
+
+import dynamic from 'next/dynamic'
+const CustomPagination = dynamic(import('components/CustomPagination'))
+
+interface RoomAllData {
+  id: number
+  category_id: number
+  user_id: string
+  status_id: number
+  type_id: number
+  updatedAt: Date
+  title: string
+  description: string
+  views: number
+  wished: number
+  images: string
+  contact: string
+
+  sType_id: number
+  deposit: number
+  fee: number
+
+  supply_area: number
+  area: number
+  total_floor: number
+  floor: number
+  move_in: Date
+  heat_id: number
+
+  name: string
+  doro: string
+  jibun: string
+  detail: string
+  lat: number
+  lng: number
+
+  maintenance_fee: number
+  maintenance_ids?: string
+  elevator: boolean
+  parking: boolean
+  parking_fee: number
+  structure_ids?: string
+  option_ids?: string
+}
 
 export default function Rooms() {
   const { status } = useSession()
@@ -46,8 +88,8 @@ export default function Rooms() {
   const searchRef = useRef<HTMLInputElement | null>(null)
 
   // const [keyword, setKeyword] = useState<string>('')
-  const [search, setSearch] = useState<string | null>(() =>
-    router.query.keyword ? String(router.query.keyword) : null
+  const [search, setSearch] = useState<string | undefined>(() =>
+    router.query.keyword ? String(router.query.keyword) : undefined
   )
 
   // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -167,9 +209,10 @@ export default function Rooms() {
     }
   )
   useEffect(() => {
-    if (search) return
-    setSearch(String(router.query.keyword))
-  })
+    if (search === undefined){
+      setSearch(String(router.query.keyword))
+    }
+  }, [search])
 
   useEffect(() => {
     if (!rooms || !search || !map) return
@@ -211,11 +254,11 @@ export default function Rooms() {
   }
 
   const onIdle = (e: kakao.maps.Map) => {
+    setSearch('')
     setS(e.getBounds().getSouthWest().getLat())
     setW(e.getBounds().getSouthWest().getLng())
     setN(e.getBounds().getNorthEast().getLat())
     setE(e.getBounds().getNorthEast().getLng())
-    setSearch('')
   }
 
   return (

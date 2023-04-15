@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import { Chip, FileButton, Loader, Modal } from '@mantine/core'
 import { IconExclamationCircle, IconMapPin, IconX } from '@tabler/icons'
-import Map from 'components/MapN'
 import {
   HoverDiv,
   StyledImage,
@@ -13,13 +12,6 @@ import {
   subColor_medium,
 } from 'components/styledComponent'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import {
-  AddressInfo,
-  BasicInfo,
-  MoreInfo,
-  Room,
-  SaleInfo,
-} from '@prisma/client'
 import { useSession } from 'next-auth/react'
 import {
   CATEGORY_MAP,
@@ -34,14 +26,18 @@ import {
 } from 'constants/const'
 import { useRouter } from 'next/router'
 import format from 'date-fns/format'
-import HomeLogo from 'components/home/HomeLogo'
-import UploadCaveats from 'components/upload/UploadCaveats'
-import CustomSegmentedControl from 'components/CustomSegmentedControl'
 import styled from '@emotion/styled'
 import { Calendar } from '@mantine/dates'
-import CustomCheckBox from 'components/CustomCheckBox'
 import { add, differenceInDays, sub } from 'date-fns'
-import CustomPagination from 'components/CustomPagination'
+import dynamic from 'next/dynamic'
+const Map = dynamic(import('components/MapN'))
+const UploadCaveats = dynamic(import('components/upload/UploadCaveats'))
+const CustomSegmentedControl = dynamic(
+  import('components/CustomSegmentedControl')
+)
+const CustomCheckBox = dynamic(import('components/CustomCheckBox'))
+const CustomPagination = dynamic(import('components/CustomPagination'))
+const HomeLogo = dynamic(import('components/home/HomeLogo'))
 
 const DESCRIPTION_PLACEHOLDER = `[상세설명 작성 주의사항]
 - 매물 정보와 관련없는 홍보성 정보는 입력할 수 없습니다.
@@ -52,17 +48,53 @@ const DESCRIPTION_PLACEHOLDER = `[상세설명 작성 주의사항]
 const DETAILADDR_PLACEHOLDER = `상세 주소
 예) e편한세상 101동 1101호`
 
-export interface RoomUploadData {
-  room: Omit<
-    Room,
-    'user_id' | 'id' | 'updatedAt' | 'status_id' | 'views' | 'wished'
-  >
-  saleInfo: Omit<SaleInfo, 'id' | 'room_id'>
-  basicInfo: Omit<BasicInfo, 'id' | 'room_id'>
-  addressInfo: Omit<AddressInfo, 'id' | 'room_id'>
-  moreInfo: Omit<MoreInfo, 'id' | 'room_id'>
+interface RoomUploadData {
+  room: {
+    category_id: number
+    type_id: number
+    title: string
+    description: string
+    images: string
+    contact: string
+  }
+  saleInfo: { type_id: number; deposit: number; fee: number }
+  basicInfo: {
+    supply_area: number
+    area: number
+    total_floor: number
+    floor: number
+    move_in: Date
+    heat_id: number
+  }
+  addressInfo: {
+    name: string
+    doro: string
+    jibun: string
+    detail: string
+    lat: number
+    lng: number
+  }
+  moreInfo: {
+    maintenance_fee: number
+    maintenance_ids?: string
+    elevator: boolean
+    parking: boolean
+    parking_fee: number
+    structure_ids?: string
+    option_ids?: string
+  }
 }
-export interface ManagedRoom extends Omit<Room, 'user_id' | 'description'> {
+interface ManagedRoom {
+  id: number
+  category_id: number
+  status_id: number
+  type_id: number
+  updatedAt: Date
+  title: string
+  views: number
+  wished: number
+  images: string
+  contact: string
   sType_id: number //전월세
   deposit: number
   fee: number
@@ -70,6 +102,12 @@ export interface ManagedRoom extends Omit<Room, 'user_id' | 'description'> {
   detail: string
   area: number
 }
+
+interface RoomStatus{
+  id: number,
+  status_id: number
+}
+
 export default function Upload() {
   const router = useRouter()
   const queryClient = useQueryClient()
@@ -332,13 +370,14 @@ export default function Upload() {
             },
             moreInfo: {
               maintenance_fee: Number(mFee),
-              maintenance_ids: mOption.length === 0 ? null : mOption.join(','),
+              maintenance_ids:
+                mOption.length === 0 ? undefined : mOption.join(','),
               elevator: Boolean(Number(elevator)),
               parking: Boolean(Number(parking)),
               parking_fee: parking === '0' ? 0 : Number(pFee),
-              option_ids: option.length === 0 ? null : option.join(','),
+              option_ids: option.length === 0 ? undefined : option.join(','),
               structure_ids:
-                structure.length === 0 ? null : structure.join(','),
+                structure.length === 0 ? undefined : structure.join(','),
             },
           })
     }
@@ -431,7 +470,7 @@ export default function Upload() {
   const { mutate: updateStatus } = useMutation<
     unknown,
     unknown,
-    Pick<Room, 'id' | 'status_id'>,
+    RoomStatus,
     any
   >(
     (items) =>
