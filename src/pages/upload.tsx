@@ -238,7 +238,6 @@ export default function Upload() {
         .then((res) => res.items),
     {
       onSuccess: async () => {
-        queryClient.invalidateQueries([MANAGED_ROOMS_QUERY_KEY])
         setCategory('1')
         setYm('1')
         setRoomType('1')
@@ -255,6 +254,7 @@ export default function Upload() {
         setStructure([])
         setImages([])
         setIsUploadPage(false)
+        queryClient.invalidateQueries([MANAGED_ROOMS_QUERY_KEY])
       },
     }
   )
