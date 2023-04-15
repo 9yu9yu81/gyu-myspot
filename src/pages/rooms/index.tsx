@@ -168,8 +168,8 @@ export default function Rooms() {
     }
   )
   useEffect(() => {
-    if (!router.query.keyword) return
-    search === null && setSearch(String(router.query.keyword))
+    if (search) return
+    setSearch(String(router.query.keyword))
   })
 
   useEffect(() => {
