@@ -18,7 +18,7 @@ async function addRoom(
   moreInfo: Omit<MoreInfo, 'id' | 'room_id'>
 ) {
   try {
-    await prisma.room.update({
+    const response = await prisma.room.update({
       where: { id: room.id },
       data: { ...room },
     })
@@ -38,6 +38,8 @@ async function addRoom(
       where: { room_id: room.id },
       data: { ...moreInfo },
     })
+    console.log(response)
+    return response
   } catch (error) {
     console.error(error)
   }
