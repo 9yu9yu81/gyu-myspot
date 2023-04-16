@@ -88,8 +88,8 @@ export default function Rooms() {
   const searchRef = useRef<HTMLInputElement | null>(null)
 
   // const [keyword, setKeyword] = useState<string>('')
-  const [search, setSearch] = useState<string | undefined>(() =>
-    router.query.keyword ? String(router.query.keyword) : undefined
+  const [search, setSearch] = useState<string>(
+    () => router.query.keyword as string
   )
 
   // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -208,11 +208,6 @@ export default function Rooms() {
       },
     }
   )
-  useEffect(() => {
-    if (search === undefined){
-      setSearch(String(router.query.keyword))
-    }
-  }, [search])
 
   useEffect(() => {
     if (!rooms || !search || !map) return
