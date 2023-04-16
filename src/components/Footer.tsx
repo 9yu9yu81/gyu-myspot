@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { IconBrandInstagram } from '@tabler/icons'
+import { IconBrandGithub, IconBrandInstagram } from '@tabler/icons'
 import { useRouter } from 'next/router'
 import styled from '@emotion/styled'
 import { mainColor } from './styledComponent'
@@ -42,8 +42,13 @@ export default function Footer() {
         <span>찾아주셔서 감사드립니다.</span>
         <IconBrandInstagram
           stroke={1.25}
-          className="ml-auto mr-4"
+          className="ml-auto mr-2 hover:cursor-pointer"
           onClick={() => router.push('https://www.instagram.com/9yu9yu81/')}
+        />
+        <IconBrandGithub
+          stroke={1.25}
+          className="hover:cursor-pointer mr-2"
+          onClick={() => router.push('https://github.com/9yu9yu81/gyu-myspot')}
         />
       </div>
     </Footer_Div>
