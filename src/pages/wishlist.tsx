@@ -12,8 +12,8 @@ import Image from 'next/image'
 import { IconHeart } from '@tabler/icons'
 import { useSession } from 'next-auth/react'
 import styled from '@emotion/styled'
-import { useRouter } from 'next/router'
 import dynamic from 'next/dynamic'
+import Link from 'next/link'
 const CustomPagination = dynamic(() => import('components/CustomPagination'))
 
 interface WishedRoom {
@@ -52,7 +52,6 @@ const scStyles = () => ({
 export default function wishlist() {
   const queryClient = useQueryClient()
   const { status } = useSession()
-  const router = useRouter()
 
   const WISHLIST_TAKE = 9
   const [activePage, setActivePage] = useState<number>(1)
@@ -200,14 +199,16 @@ export default function wishlist() {
             {wishlists.map((wishlist, idx) => (
               <WishWrapper key={idx}>
                 <StyledImage style={{ width: '313px', height: '234px' }}>
-                  <Image
-                    sizes="313px"
-                    className="styled"
-                    alt="img"
-                    src={wishlist.images.split(',')[0]}
-                    fill
-                    onClick={() => router.push(`/rooms/${wishlist.id}`)}
-                  />
+                  <Link href={`rooms/${wishlist.id}`}>
+                    <Image
+                      sizes="313px"
+                      className="styled"
+                      alt="img"
+                      src={wishlist.images.split(',')[0]}
+                      fill
+                      // onClick={() => router.push(`/rooms/${wishlist.id}`)}
+                    />
+                  </Link>
                 </StyledImage>
                 <div className="main">
                   {CATEGORY_MAP[wishlist.category_id - 1]}{' '}

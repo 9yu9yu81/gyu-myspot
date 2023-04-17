@@ -32,6 +32,7 @@ import { Loader, Menu } from '@mantine/core'
 import { menuStyle } from 'pages/mainMap'
 
 import dynamic from 'next/dynamic'
+import Link from 'next/link'
 const CustomPagination = dynamic(import('components/CustomPagination'))
 
 interface RoomAllData {
@@ -304,14 +305,16 @@ export default function Rooms() {
                       height: '150px',
                     }}
                   >
-                    <Image
-                      sizes="200px"
-                      className="styled"
-                      src={room.images.split(',')[0]}
-                      fill
-                      alt={`${room.name}`}
-                      onClick={() => router.push(`rooms/${room.id}`)}
-                    />
+                    <Link href={`rooms/${room.id}`}>
+                      <Image
+                        sizes="200px"
+                        className="styled"
+                        src={room.images.split(',')[0]}
+                        fill
+                        alt={`${room.name}`}
+                        // onClick={() => router.push(`rooms/${room.id}`)}
+                      />
+                    </Link>
                   </StyledImage>
                   <div
                     className="btn x"
@@ -475,14 +478,16 @@ export default function Rooms() {
                         height: '225px',
                       }}
                     >
-                      <Image
-                        sizes="300px"
-                        className="styled"
-                        src={room.images.split(',')[0]}
-                        alt={'thumbnail'}
-                        fill
-                        onClick={() => router.push(`rooms/${room.id}`)}
-                      />
+                      <Link href={`rooms/${room.id}`}>
+                        <Image
+                          sizes="300px"
+                          className="styled"
+                          src={room.images.split(',')[0]}
+                          alt={'thumbnail'}
+                          fill
+                          // onClick={() => router.push(`rooms/${room.id}`)}
+                        />
+                      </Link>
                     </StyledImage>
                   </Center_Div>
                   <div className="description">

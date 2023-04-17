@@ -13,6 +13,7 @@ import Image from 'next/image'
 import { useRouter } from 'next/router'
 import styled from '@emotion/styled'
 import { useSession } from 'next-auth/react'
+import Link from 'next/link'
 
 interface HomeRoom {
   id: number
@@ -150,16 +151,18 @@ export default function Home() {
                           height: '225px',
                         }}
                       >
-                        <Image
-                          sizes="300px, 225px"
-                          fill
-                          className="styled"
-                          src={room.images.split(',')[0]}
-                          alt={'thumbnail'}
-                          placeholder="blur"
-                          blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNksgUAAEcAQcKdpC0AAAAASUVORK5CYII="
-                          onClick={() => router.push(`rooms/${room.id}`)}
-                        />
+                        <Link href={`rooms/${room.id}`}>
+                          <Image
+                            sizes="300px, 225px"
+                            fill
+                            className="styled"
+                            src={room.images.split(',')[0]}
+                            alt={'thumbnail'}
+                            placeholder="blur"
+                            blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNksgUAAEcAQcKdpC0AAAAASUVORK5CYII="
+                            // onClick={() => router.push(`rooms/${room.id}`)}
+                          />
+                        </Link>
                       </StyledImage>
                     </Center_Div>
                     <div className="description">

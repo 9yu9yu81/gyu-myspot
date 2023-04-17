@@ -30,6 +30,7 @@ import styled from '@emotion/styled'
 import { Calendar } from '@mantine/dates'
 import { add, differenceInDays, sub } from 'date-fns'
 import dynamic from 'next/dynamic'
+import Link from 'next/link'
 const Map = dynamic(import('components/MapN'))
 const UploadCaveats = dynamic(import('components/upload/UploadCaveats'))
 const CustomSegmentedControl = dynamic(
@@ -1087,13 +1088,15 @@ export default function Upload() {
                     )}
                   </Manage_Div_150>
                   <StyledImage style={{ width: '300px', height: '225px' }}>
-                    <Image
-                      alt="thumbnail"
-                      className="styled"
-                      src={room.images.split(',')[0]}
-                      fill
-                      onClick={() => router.push(`/rooms/${room.id}`)}
-                    ></Image>
+                    <Link href={`rooms/${room.id}`}>
+                      <Image
+                        alt="thumbnail"
+                        className="styled"
+                        src={room.images.split(',')[0]}
+                        fill
+                        // onClick={() => router.push(`/rooms/${room.id}`)}
+                      />
+                    </Link>
                   </StyledImage>
                   <Manage_Div_350>
                     <Manage_Div_Bold>
@@ -1122,11 +1125,13 @@ export default function Upload() {
                     </Manage_Div_160>
 
                     <Manage_Btn_Wrapper>
+                    <Link href={`rooms/${room.id}/edit`}>
                       <Manage_Btn
-                        onClick={() => router.push(`rooms/${room.id}/edit`)}
+                        // onClick={() => router.push(`rooms/${room.id}/edit`)}
                       >
                         수정
                       </Manage_Btn>
+                      </Link>
                       <Manage_Btn
                         onClick={() =>
                           confirm('해당 매물을 정말 삭제하시겠습니까?') &&

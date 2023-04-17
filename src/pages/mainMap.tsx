@@ -32,6 +32,7 @@ import { useRouter } from 'next/router'
 import { Home_Input, Home_Search_Div } from 'pages'
 import { Menu } from '@mantine/core'
 import { Overlay_Container } from './rooms'
+import Link from 'next/link'
 
 export const menuStyle = (state: string, item: number | string) => {
   if (typeof item === 'number') {
@@ -396,14 +397,16 @@ export default function MainMap() {
                       height: '150px',
                     }}
                   >
-                    <Image
-                      sizes="200px"
-                      className="styled"
-                      src={room.images.split(',')[0]}
-                      fill
-                      alt={`${room.name}`}
-                      onClick={() => router.push(`rooms/${room.id}`)}
-                    />
+                    <Link href={`rooms/${room.id}`}>
+                      <Image
+                        sizes="200px"
+                        className="styled"
+                        src={room.images.split(',')[0]}
+                        fill
+                        alt={`${room.name}`}
+                        // onClick={() => router.push(`rooms/${room.id}`)}
+                      />
+                    </Link>
                   </StyledImage>
                   <div
                     className="btn x"
