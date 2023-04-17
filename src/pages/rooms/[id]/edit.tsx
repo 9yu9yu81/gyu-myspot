@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import { GetServerSidePropsContext } from 'next'
 import { useRouter } from 'next/router'
@@ -281,7 +281,7 @@ export default function RoomEdit(room: RoomAllData) {
     any
   >(
     (room) =>
-      fetch('/api/room/update-Room', {
+      fetch('/../api/room/update-Room', {
         method: 'POST',
         body: JSON.stringify(room),
       })
