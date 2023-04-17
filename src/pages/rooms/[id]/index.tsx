@@ -27,8 +27,7 @@ import Image from 'next/image'
 import { useRouter } from 'next/router'
 import Carousel from 'nuka-carousel'
 import { useEffect, useState } from 'react'
-import dynamic from 'next/dynamic'
-const MapN = dynamic(import('components/MapN'))
+import MapN from 'components/MapN'
 
 interface RoomAllData {
   id: number

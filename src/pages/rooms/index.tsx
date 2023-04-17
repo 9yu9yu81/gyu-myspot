@@ -87,10 +87,11 @@ export default function Rooms() {
   const [filter, setFilter] = useState<string>(FILTERS[0].value)
   const searchRef = useRef<HTMLInputElement | null>(null)
 
-  // const [keyword, setKeyword] = useState<string>('')
-  const [search, setSearch] = useState<string>(
-    () => router.query.keyword as string
-  )
+  const [search, setSearch] = useState<string>('')
+  useEffect(() => {
+    if (!router.isReady) return
+    setSearch(router.query.keyword as string)
+  }, [router.isReady])
 
   // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
   //   setKeyword(e.target.value)
@@ -99,13 +100,9 @@ export default function Rooms() {
     if (e.key == 'Enter') {
       if (searchRef.current) {
         setSearch(searchRef.current.value)
-        // router.replace(
-        //   `/rooms?keyword=${searchRef.current.value}`,
-        //   `/rooms?keyword=${searchRef.current.value}`,
-        //   {
-        //     shallow: true,
-        //   }
-        // )
+        // router.replace(`/rooms?keyword=${searchRef.current.value}`, `/rooms`, {
+        //   shallow: true,
+        // })
       }
     }
   }
@@ -140,7 +137,6 @@ export default function Rooms() {
       .then((res) => res.json())
       .then((data) => data.items)
   )
-
   const ROOMS_TOTAL_QUERY_KEY = `/api/room/get-Rooms-Total?keyword=&category_id=${category}&sType_id=${ym}&orderBy=${filter}&s=${s}&w=${w}&n=${n}&e=${e}`
   const { data: total } = useQuery<{ total: number }, unknown, number>(
     [ROOMS_TOTAL_QUERY_KEY],
@@ -211,7 +207,8 @@ export default function Rooms() {
   )
 
   useEffect(() => {
-    if (!rooms || !search || !map) return
+    if (!map || !search || search === '') return
+
     const ps = new kakao.maps.services.Places()
 
     ps.keywordSearch(search, (data, status, _pagination) => {
@@ -220,12 +217,9 @@ export default function Rooms() {
         map.setLevel(level)
         setOverlay({ id: undefined, isOpened: false })
         setCenter({ lat: Number(data[0].y), lng: Number(data[0].x) }) //가장 연관된 keyword 주소를 센터로
-      } else {
-        console.log('search failed')
-        return
       }
     })
-  }, [rooms, search, map])
+  }, [search, markers])
 
   function heartCheck(
     room_id: number,
@@ -250,7 +244,6 @@ export default function Rooms() {
   }
 
   const onIdle = (e: kakao.maps.Map) => {
-    setSearch('')
     setS(e.getBounds().getSouthWest().getLat())
     setW(e.getBounds().getSouthWest().getLng())
     setN(e.getBounds().getNorthEast().getLat())

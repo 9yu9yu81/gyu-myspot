@@ -37,7 +37,7 @@ export default function Home() {
   const handleEnterKeypress = (e: React.KeyboardEvent) => {
     //enter 검색
     if (e.key == 'Enter') {
-      router.push(`/rooms?keyword=${keyword}`)
+      router.push(`/rooms?keyword=${keyword}`, '/rooms')
     }
   }
   const HOME_ROOMS_QUERY_KEY = 'api/room/get-RecommendRooms'
