@@ -90,8 +90,7 @@ interface RoomAllData {
   updatedAt: Date
   title: string
   description: string
-  views: number
-  wished: number
+
   images: string
   contact: string
 
@@ -186,7 +185,7 @@ export default function RoomEdit(room: RoomAllData) {
   const [contact, setContact] = useState<string>(room.contact) //연락처
   const [cChecked, setCChecked] = useState<boolean>(false) //기존 연락처 사용할지
   //daum-postcode
-  const [name, setName] = useState<string>('') //건물명
+  const [name, setName] = useState<string>(room.name) //건물명
   const [doro, setDoro] = useState<string>(room.doro)
   const [jibun, setJibun] = useState<string>(room.jibun)
   const [lat, setLat] = useState<number>(room.lat)
@@ -290,7 +289,7 @@ export default function RoomEdit(room: RoomAllData) {
         .then((res) => res.items),
     {
       onSuccess: async () => {
-        router.push(`/rooms/${room.id}`)
+        router.replace(`/rooms/${room.id}`)
       },
     }
   )

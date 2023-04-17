@@ -10,7 +10,7 @@ async function getRoom(
   orderBy: string
 ) {
   try {
-    const validKeyword = `%${keyword}%`
+    const validKeyword = `${keyword}%`
     const validCategory = category_id === 0 ? '%' : category_id
     const validSType = sType_id === 0 ? '%' : sType_id
 

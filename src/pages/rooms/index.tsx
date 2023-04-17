@@ -126,6 +126,7 @@ export default function Rooms() {
     lat: number
     lng: number
   }>({ lat: 35.824171, lng: 127.14805 })
+  const [level, setLevel] = useState<number>(5)
 
   const ROOMS_QUERY_KEY = `/api/room/get-Rooms-Take?keyword=&category_id=${category}&sType_id=${ym}&orderBy=${filter}&s=${s}&w=${w}&n=${n}&e=${e}&take=${ROOM_TAKE}&skip=${
     (activePage - 1) * ROOM_TAKE
@@ -215,9 +216,10 @@ export default function Rooms() {
 
     ps.keywordSearch(search, (data, status, _pagination) => {
       if (status === kakao.maps.services.Status.OK) {
+        setLevel(4)
+        map.setLevel(level)
         setOverlay({ id: undefined, isOpened: false })
         setCenter({ lat: Number(data[0].y), lng: Number(data[0].x) }) //가장 연관된 keyword 주소를 센터로
-        map.setLevel(5)
       } else {
         console.log('search failed')
         return
@@ -259,7 +261,7 @@ export default function Rooms() {
     <Rooms_Container>
       <Map
         onCreate={setMap}
-        level={6}
+        level={level}
         center={{ lat: center.lat, lng: center.lng }}
         style={{
           width: '1000px',

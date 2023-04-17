@@ -14,7 +14,7 @@ async function getRoomsTake(
   skip: number
 ) {
   try {
-    const validKeyword = keyword ? `%${keyword}%` : '%'
+    const validKeyword = keyword ? `${keyword}%` : '%'
     const validCategory = category_id === 0 ? '%' : category_id
     const validSType = sType_id === 0 ? '%' : sType_id
 

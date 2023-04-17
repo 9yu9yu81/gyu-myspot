@@ -8,7 +8,7 @@ async function getRoom(id: number) {
     const response: any = await prisma.$queryRaw`
       select r.*,
             s.type_id as sType_id, s.deposit, s.fee,
-            a.doro, a.jibun, a.detail,
+            a.doro, a.jibun, a.detail,a.name,
             b.supply_area, b.area, b.total_floor, b.floor, b.move_in, b.heat_id,
             m.maintenance_fee, m.maintenance_ids, m.elevator, m.parking, m.parking_fee, m.option_ids, m.structure_ids
             from Room as r, SaleInfo as s, AddressInfo as a, BasicInfo as b, MoreInfo as m
