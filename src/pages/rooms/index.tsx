@@ -208,19 +208,19 @@ export default function Rooms() {
   )
 
   useEffect(() => {
-    if (!map || !search || search === '') return
+    if (!search || search === '') return
 
     const ps = new kakao.maps.services.Places()
 
     ps.keywordSearch(search, (data, status, _pagination) => {
       if (status === kakao.maps.services.Status.OK) {
         setLevel(4)
-        map.setLevel(level)
+        map?.setLevel(level)
         setOverlay({ id: undefined, isOpened: false })
         setCenter({ lat: Number(data[0].y), lng: Number(data[0].x) }) //가장 연관된 keyword 주소를 센터로
       }
     })
-  }, [search, markers])
+  }, [search])
 
   function heartCheck(
     room_id: number,
