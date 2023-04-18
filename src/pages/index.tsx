@@ -160,7 +160,6 @@ export default function Home() {
                             alt={'thumbnail'}
                             placeholder="blur"
                             blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNksgUAAEcAQcKdpC0AAAAASUVORK5CYII="
-                            // onClick={() => router.push(`rooms/${room.id}`)}
                           />
                         </Link>
                       </StyledImage>

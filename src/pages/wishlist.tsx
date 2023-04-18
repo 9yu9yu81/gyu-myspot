@@ -206,7 +206,6 @@ export default function wishlist() {
                       alt="img"
                       src={wishlist.images.split(',')[0]}
                       fill
-                      // onClick={() => router.push(`/rooms/${wishlist.id}`)}
                     />
                   </Link>
                 </StyledImage>

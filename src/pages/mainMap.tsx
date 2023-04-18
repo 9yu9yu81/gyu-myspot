@@ -325,7 +325,6 @@ export default function MainMap() {
                 >
                   내 방 관리
                 </Menu.Item>
-                {/* <Menu.Item>내가 쓴 글</Menu.Item> */}
                 <Menu.Divider />
                 <Menu.Item onClick={() => signOut()}>
                   <Center2_Div>
@@ -404,7 +403,6 @@ export default function MainMap() {
                         src={room.images.split(',')[0]}
                         fill
                         alt={`${room.name}`}
-                        // onClick={() => router.push(`rooms/${room.id}`)}
                       />
                     </Link>
                   </StyledImage>

@@ -1094,7 +1094,6 @@ export default function Upload() {
                         className="styled"
                         src={room.images.split(',')[0]}
                         fill
-                        // onClick={() => router.push(`/rooms/${room.id}`)}
                       />
                     </Link>
                   </StyledImage>
@@ -1125,12 +1124,8 @@ export default function Upload() {
                     </Manage_Div_160>
 
                     <Manage_Btn_Wrapper>
-                    <Link href={`rooms/${room.id}/edit`}>
-                      <Manage_Btn
-                        // onClick={() => router.push(`rooms/${room.id}/edit`)}
-                      >
-                        수정
-                      </Manage_Btn>
+                      <Link href={`rooms/${room.id}/edit`}>
+                        <Manage_Btn>수정</Manage_Btn>
                       </Link>
                       <Manage_Btn
                         onClick={() =>
