@@ -24,29 +24,54 @@ async function addRoom(
     const user: any = await prisma.$queryRaw`
       select user_id from Room as r where r.id = ${room.id}
     `
-    if (user[0].user_id === user_id) {
-      await prisma.room.update({
-        where: { id: room.id },
-        data: { ...room },
-      })
-      await prisma.saleInfo.update({
-        where: { room_id: room.id },
-        data: { ...saleInfo },
-      })
-      await prisma.basicInfo.update({
-        where: { room_id: room.id },
-        data: { ...basicInfo },
-      })
-      await prisma.addressInfo.update({
-        where: { room_id: room.id },
-        data: { ...addressInfo },
-      })
-      await prisma.moreInfo.update({
-        where: { room_id: room.id },
-        data: { ...moreInfo },
-      })
-      return { message: 'update success' }
-    } else return { message: 'update fail' }
+    // if (user[0].user_id === user_id) {
+    //   await prisma.room.update({
+    //     where: { id: room.id },
+    //     data: { ...room },
+    //   })
+    //   await prisma.saleInfo.update({
+    //     where: { room_id: room.id },
+    //     data: { ...saleInfo },
+    //   })
+    //   await prisma.basicInfo.update({
+    //     where: { room_id: room.id },
+    //     data: { ...basicInfo },
+    //   })
+    //   await prisma.addressInfo.update({
+    //     where: { room_id: room.id },
+    //     data: { ...addressInfo },
+    //   })
+    //   await prisma.moreInfo.update({
+    //     where: { room_id: room.id },
+    //     data: { ...moreInfo },
+    //   })
+    //   return { message: 'update success' }
+    // } else throw 'Incorrect Session'
+
+    if (user[0].user_id !== user_id) throw 'Incorrect Session'
+    else {
+      await prisma.$queryRaw`
+      update Room set id = ${room.id}, category_id = ${room.category_id}, type_id = ${room.type_id}, title = ${room.title}, description = ${room.description}, images = ${room.images}, contact = ${room.contact} where id = ${room.id}
+    `
+      await prisma.$queryRaw`
+      update SaleInfo set type_id = ${saleInfo.type_id}, deposit = ${saleInfo.deposit}, fee = ${saleInfo.fee} where room_id = ${room.id}
+      `
+      await prisma.$queryRaw`
+      update BasicInfo set supply_area = ${basicInfo.supply_area}, area = ${
+        basicInfo.area
+      }, total_floor = ${basicInfo.total_floor}, floor = ${
+        basicInfo.floor
+      }, move_in = ${new Date(String(basicInfo.move_in))}, heat_id = ${
+        basicInfo.heat_id
+      } where room_id = ${room.id}
+      `
+      await prisma.$queryRaw`
+      update AddressInfo set name = ${addressInfo.name}, doro = ${addressInfo.doro}, jibun = ${addressInfo.jibun}, detail = ${addressInfo.detail}, lat = ${addressInfo.lat}, lng = ${addressInfo.lng} where room_id = ${room.id}
+      `
+      await prisma.$queryRaw`
+      update MoreInfo set maintenance_fee = ${moreInfo.maintenance_fee}, maintenance_ids = ${moreInfo.maintenance_ids}, elevator = ${moreInfo.elevator}, parking = ${moreInfo.parking}, parking_fee = ${moreInfo.parking_fee}, structure_ids = ${moreInfo.structure_ids}, option_ids = ${moreInfo.option_ids} where room_id = ${room.id}
+      `
+    }
   } catch (error) {
     console.error(error)
   }
@@ -65,7 +90,7 @@ export default async function handler(
   const roomAllData = JSON.parse(req.body)
 
   if (session == null) {
-    res.status(200).json({ items: undefined, message: 'no Session' })
+    res.status(200).json({ items: [], message: 'no Session' })
     return
   }
 
