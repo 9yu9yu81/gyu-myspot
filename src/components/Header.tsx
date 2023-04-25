@@ -145,10 +145,11 @@ const Container = styled.div`
   margin: 0 20px 0 20px;
   grid-template-columns: 1fr 5fr 1fr;
   @media (min-width: 576px) {
-    grid-template-columns: 1fr 2fr 4fr 1fr;
-    font-size: 0.7rem;
+    grid-template-columns: 1fr 1fr 4fr 1fr;
+    font-size: 0.75rem;
   }
   @media (min-width: 768px) {
+    grid-template-columns: 1fr 2fr 4fr 1fr;
     font-size: 0.8rem;
   }
   @media (min-width: 992px) {
@@ -173,7 +174,6 @@ const MenuWrapper = styled.div`
   }
 `
 const MenuBtn1 = styled.div`
-  margin: 0 0.3rem 0 0.3rem;
   display: flex;
   justify-content: center;
   align-items: center;
