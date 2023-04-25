@@ -1,29 +1,22 @@
 import styled from '@emotion/styled'
-import { mainColor, subColor_Dark } from 'components/styledComponent'
+import { subColor_Dark } from 'components/styledComponent'
 import Image from 'next/image'
 
 export default function Introduce() {
   return (
     <Container>
-      <div className="sub" style={{ width: '1000px' }}>
-        <IntroWrapper>
-          {`안녕하세요.
-MySpot 개발자 9yu9yu81 입니다.
-개발 공부를 시작하고, 
-제대로 만들어보는 페이지가 처음이라 부족한 점이 많고,
-누군가에게 보여주고 소개하는 것이 많이 어색하기도 합니다.
+      <Intro>
+        <div style={{ margin: '1rem;' }}>
+          {`안녕하세요. MySpot 개발자 9yu9yu81 입니다.
+개발 공부를 시작하고, 제대로 만들어보는 페이지가 처음이라 부족한 점이 많고, 누군가에게 보여주고 소개하는 것이 많이 어색하기도 합니다.
 
-이 페이지의 시작은,
-대학생활을 하면서 방을 구하는 주변 친구들을 보며, 
-문득 생각이 들었던 아이디어를, 
-한 번 구현 해보고 싶다는 마음으로 시작이 되었습니다.
+이 페이지의 시작은, 대학생활을 하면서 방을 구하는 주변 친구들을 보며, 문득 생각이 들었던 아이디어를, 한 번 구현 해보고 싶다는 마음으로 시작이 되었습니다.
 `}
-        </IntroWrapper>
-        <ImageWrapper>
+        </div>
+        <ImgWrapper>
           <Image src="/images/lightRoom.jpg" fill alt="lightRoom" />
-        </ImageWrapper>
-      </div>
-      <div className="split" />
+        </ImgWrapper>
+      </Intro>
       <div className="main">
         {`  보통 우리는 오랜 공부 하는 시간을 거쳐서 스무 살이 되어, 설레는 마음으로 대학의 문을 두드리곤 합니다.
 그곳이 원하는 곳이었든, 아쉽게도 원치 않던 곳이었든, 새로운 환경으로의 첫 발걸음이 시작되는 가운데, 
@@ -67,63 +60,75 @@ MySpot 개발자 9yu9yu81 입니다.
 수고스러움을 덜어줄 수 있게 하자는 단순한 생각으로 이러한 사업을 시작해 보게 되었고,
 이렇게 직접 고민하며 페이지를 만들어보게 되었습니다.`}
       </div>
-      <div className="split" />
-      <div className="sub">
-        <ImageWrapper>
+      <Outro>
+        <ImgWrapper className="outro">
           <Image src="/images/introRoom.png" fill alt="IntroRoom" />
-        </ImageWrapper>
-        <IntroWrapper>
-          {`부족한 점이 많습니다.
-하지만 이 프로젝트를 진행하면서
-많은 고민을 하고 시행착오를 겪으면서도,
+        </ImgWrapper>
+        <div style={{ margin: '1rem' }}>
+          {`
+  부족한 점이 많습니다. 하지만 이 프로젝트를 진행하면서 많은 고민을 하고 시행착오를 겪으면서도,
 
-그 안에서 재미를 느끼고 있고
-앞으로 발전할 점들 또한 많습니다.
+그 안에서 재미를 느끼고 있고 앞으로 발전할 점들 또한 많습니다. 
 열심히 배우고 항상 정진할 마음가짐으로 임하겠습니다.
 
-부족한 글 끝까지 읽어주셔서 감사드리며,
-또한 찾아오신 모든 분들께 진심으로 감사드립니다.
+부족한 글 끝까지 읽어주셔서 감사드리며, 또한 찾아오신 모든 분들께 진심으로 감사드립니다.
           `}
-        </IntroWrapper>
-      </div>
+        </div>
+      </Outro>
     </Container>
   )
 }
 
 const Container = styled.div`
-  width: 1000px;
-  margin: 30px 0 100px 0;
+  margin: 100px 0 100px 0;
   padding: 0 20px 0 20px;
-  .sub {
-    display: flex;
-    width: 1000px;
-    height: 375px;
-    margin-top: 100px;
-  }
   .main {
-    width: 1000px;
-    padding-left: 60px;
   }
-  font-weight: 200;
-  color: ${mainColor};
-  font-size: 18px;
+  font-weight: 300;
   white-space: pre-wrap;
-  line-height: 200%;
+  line-height: 170%;
   .split {
-    width: 1000px;
     border-top: 0.5px solid ${subColor_Dark};
     margin: 120px 0 120px 0px;
   }
+
+  @media (min-width: 576px) {
+    line-height: 180%;
+  }
+  @media (min-width: 768px) {
+    line-height: 200%;
+  }
+  @media (min-width: 992px) {
+  }
+  @media (min-width: 1200px) {
+  }
 `
 
-const ImageWrapper = styled.div`
+const Intro = styled.div`
+  display: grid;
+  align-items: center;
+  @media (min-width: 992px) {
+    grid-template-columns: 1fr 1fr;
+  }
+`
+const Outro = styled(Intro)``
+
+const ImgWrapper = styled.div`
+  width: 100%;
+  height: 14rem;
   position: relative;
-  min-width: 500px;
-  width: 500px;
-  height: 375px;
-`
-
-const IntroWrapper = styled.div`
-  width: 500px;
-  padding: 10px 20px 30px 30px;
+  margin: 1rem 0 1rem 0;
+  @media (min-width: 576px) {
+    height: 18rem;
+  }
+  @media (min-width: 768px) {
+    height: 24rem;
+  }
+  @media (min-width: 992px) {
+    height: 18rem;
+    margin: 0;
+  }
+  @media (min-width: 1200px) {
+    height: 20rem;
+  }
 `

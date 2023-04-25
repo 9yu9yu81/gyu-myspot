@@ -86,20 +86,20 @@ export default function Header() {
         <DrawerContainer>
           <div className="border-r border-black">
             {MenuMap.map((menu, idx) => (
-              <DrawerMenu
+              <Link
                 key={menu.content}
-                onClick={() =>
-                  router.push(
-                    idx > 1
-                      ? status === 'authenticated'
-                        ? menu.href
-                        : '/login'
-                      : menu.href
-                  )
+                href={
+                  idx > 1
+                    ? status === 'authenticated'
+                      ? menu.href
+                      : '/login'
+                    : menu.href
                 }
               >
-                {menu.content}
-              </DrawerMenu>
+                <DrawerMenu key={menu.content} onClick={close}>
+                  {menu.content}
+                </DrawerMenu>
+              </Link>
             ))}
           </div>
           <div className="flex flex-col justify-center items-center">
