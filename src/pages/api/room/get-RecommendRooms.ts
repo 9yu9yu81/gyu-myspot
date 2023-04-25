@@ -14,15 +14,7 @@ async function getManagedRooms() {
               and r.id=a.room_id
               and r.status_id = 1
             order by r.views desc
-            limit 3`
-    // const response = await prisma.$queryRaw`
-    // select *
-    //       from Room as r, SaleInfo as s, AddressInfo as a
-    //       where r.id=s.room_id
-    //         and r.id=a.room_id
-    //         and r.status_id = 1
-    //       order by r.views desc
-    //       limit 3`
+            limit 4`
     // console.log(response)
     return response
   } catch (error) {

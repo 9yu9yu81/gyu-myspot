@@ -7,6 +7,7 @@ import { SessionProvider } from 'next-auth/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 // import { scheduleJob } from 'node-schedule'
 import { useRouter } from 'next/router'
+import styled from '@emotion/styled'
 
 export default function App({
   Component,
@@ -38,8 +39,10 @@ export default function App({
           <>
             <Header />
             <div className="flex justify-center items-center flex-col">
-              <Component {...pageProps} />
-              <Footer />
+              <Container>
+                <Component {...pageProps} />
+                <Footer />
+              </Container>
             </div>
           </>
         )}
@@ -59,3 +62,19 @@ export default function App({
 //   }
 //   return children
 // }
+
+const Container = styled.div`
+  width: 100%;
+  @media (min-width: 576px) {
+    width: 576px;
+  }
+  @media (min-width: 768px) {
+    width: 768px;
+  }
+  @media (min-width: 992px) {
+    width: 992px;
+  }
+  @media (min-width: 1200px) {
+    width: 1200px;
+  }
+`

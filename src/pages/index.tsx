@@ -128,7 +128,7 @@ export default function Home() {
           />
         </Home_Search_Div>
       </div>
-      <div className="sector" style={{ padding: '20px 0 50px 0' }}>
+      <div style={{ padding: '20px 0 50px 0' }}>
         <Home_Recommend_Div>
           <div className="title">
             추천스팟
@@ -139,15 +139,15 @@ export default function Home() {
               <Loader color="dark" />
             </Center_Div>
           ) : (
-            <Grid_Container>
+            <GridContainer>
               {rooms &&
                 rooms.map((room, idx) => (
-                  <div key={idx}>
-                    <Center_Div>
+                  <div className="flex flex-col justify-center items-center">
+                    <div key={idx} className={`wrapper div${idx}`}>
                       <StyledImage
                         style={{
-                          width: '300px',
-                          height: '225px',
+                          width: '312px',
+                          height: '234px',
                         }}
                       >
                         <Link href={`rooms/${room.id}`}>
@@ -162,32 +162,32 @@ export default function Home() {
                           />
                         </Link>
                       </StyledImage>
-                    </Center_Div>
-                    <div className="description">
-                      <div className="main">
-                        {CATEGORY_MAP[room.category_id - 1]}{' '}
-                        {YEAR_MONTH_MAP[room.sType_id - 1]} {room.deposit}
-                        {room.sType_id !== 1 && '/' + room.fee}
-                        <div className="heart">
-                          <IconHeart
-                            size={26}
-                            stroke={1.5}
-                            color={heartCheck(room.id, { type: 'color' })}
-                            fill={heartCheck(room.id, { type: 'fill' })}
-                            onClick={() =>
-                              status === 'authenticated'
-                                ? updateIsWished(room.id)
-                                : router.push('/login')
-                            }
-                          />
+                      <div className="description">
+                        <div className="main">
+                          {CATEGORY_MAP[room.category_id - 1]}{' '}
+                          {YEAR_MONTH_MAP[room.sType_id - 1]} {room.deposit}
+                          {room.sType_id !== 1 && '/' + room.fee}
+                          <div className="heart">
+                            <IconHeart
+                              size={26}
+                              stroke={1.5}
+                              color={heartCheck(room.id, { type: 'color' })}
+                              fill={heartCheck(room.id, { type: 'fill' })}
+                              onClick={() =>
+                                status === 'authenticated'
+                                  ? updateIsWished(room.id)
+                                  : router.push('/login')
+                              }
+                            />
+                          </div>
                         </div>
+                        <div>{room.doro}</div>
+                        <div>{room.title}</div>
                       </div>
-                      <div>{room.doro}</div>
-                      <div>{room.title}</div>
                     </div>
                   </div>
                 ))}
-            </Grid_Container>
+            </GridContainer>
           )}
         </Home_Recommend_Div>
       </div>
@@ -209,7 +209,7 @@ const Container = styled.div`
   .title {
     font-size: 20px;
     font-weight: 300;
-    margin: 20px 0 20px 0;
+    margin: 20px 0 40px 0;
     position: relative;
   }
 `
@@ -257,17 +257,20 @@ const Home_Recommend_Div = styled.div`
     }
   }
 `
-const Grid_Container = styled.div`
+const GridContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-row-gap: 30px;
   grid-column-gap: 30px;
   * {
-    font-size: 15px;
+    font-size: 0.75rem;
+  }
+  .wrapper {
+    width: 310px;
   }
   .main {
     display: flex;
-    font-size: 18px;
+    font-size: 1rem;
     font-weight: 700;
     align-items: center;
   }
@@ -278,6 +281,21 @@ const Grid_Container = styled.div`
     }
   }
   .description {
-    margin: 10px 7px 0 7px;
+    margin: 10px 0 10px 0;
+  }
+
+  grid-template-columns: repeat(1, 1fr);
+  @media (min-width: 576px) {
+  }
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @media (min-width: 992px) {
+    grid-template-columns: repeat(3, 1fr);
+    .div3 {
+      display: none;
+    }
+  }
+  @media (min-width: 1200px) {
   }
 `
