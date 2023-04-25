@@ -3,7 +3,6 @@ import { IconHeart, IconSearch } from '@tabler/icons'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
   StyledImage,
-  mainColor,
   subColor_Dark,
   subColor_medium,
 } from 'components/styledComponent'
@@ -113,7 +112,7 @@ export default function Home() {
   }
 
   return (
-    <Home_Container>
+    <Container>
       <div className="sector" style={{ padding: '160px 60px 180px 60px' }}>
         <div style={{ fontSize: '40px', fontWeight: '700' }}>
           어떤 스팟을 찾으세요?
@@ -192,7 +191,7 @@ export default function Home() {
           )}
         </Home_Recommend_Div>
       </div>
-    </Home_Container>
+    </Container>
   )
 }
 export const alignCenter = styled.div`
@@ -203,11 +202,7 @@ export const Center_Div = styled(alignCenter)`
   justify-content: center;
 `
 
-const Home_Container = styled.div`
-  * {
-    color: ${mainColor};
-  }
-  width: 1000px;
+const Container = styled.div`
   .sector {
     border-bottom: solid 0.5px black;
   }
@@ -220,7 +215,6 @@ const Home_Container = styled.div`
 `
 export const Home_Input = styled.input`
   margin: 0 10px 0 10px;
-  width: 100%;
   :focus {
     outline: none !important;
   }
@@ -228,14 +222,14 @@ export const Home_Input = styled.input`
 
 export const Home_Search_Div = styled(alignCenter)`
   :hover {
-    border: 0.5px solid ${mainColor};
+    border: 0.5px solid black;
   }
   :active {
-    border: 1px solid ${mainColor};
+    border: 1px solid black;
   }
   :focus {
     outline: none !important;
-    border: 1px solid ${mainColor};
+    border: 1px solid black;
   }
   border: 0.5px solid ${subColor_medium};
   padding: 10px;
@@ -264,7 +258,6 @@ const Home_Recommend_Div = styled.div`
   }
 `
 const Grid_Container = styled.div`
-  width: 1000px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-row-gap: 30px;
