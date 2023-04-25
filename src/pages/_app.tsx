@@ -37,11 +37,9 @@ export default function App({
         ) : (
           <>
             <Header />
-            <div className="flex justify-center">
-              <div style={{ maxWidth: '1000px', width: '100%' }}>
-                <Component {...pageProps} />
-                <Footer />
-              </div>
+            <div className="flex justify-center items-center flex-col">
+              <Component {...pageProps} />
+              <Footer />
             </div>
           </>
         )}

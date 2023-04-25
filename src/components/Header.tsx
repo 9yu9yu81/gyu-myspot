@@ -4,116 +4,117 @@ import { useRouter } from 'next/router'
 import Image from 'next/image'
 import { Menu } from '@mantine/core'
 import HomeLogo from './home/HomeLogo'
-import { Center2_Div, HoverDiv, mainColor } from './styledComponent'
+import { Center2_Div } from './styledComponent'
 import styled from '@emotion/styled'
 
+const MenuMap = [
+  { content: '사업소개', href: '/introduce' },
+  { content: '지도', href: '/mainMap' },
+  { content: '방내놓기', href: '/upload' },
+  { content: '관심목록', href: '/wishlist' },
+]
+
 export default function Header() {
-  //todo 유저 아이콘 클릭 => list (계약목록, 내가 게시한 매물, 로그아웃 ) 구현
-  //todo 커뮤니티 (방구하기, 양도하기, 정보 스팟, 자유 스팟)
   const router = useRouter()
   const { data: session, status } = useSession()
 
   return (
-    <Header_Div>
-      <HomeLogo size={24} />
-      <span className="m-auto" />
-      <Header_Btn_B onClick={() => router.push('/introduce')}>
-        사업소개
-      </Header_Btn_B>
-      {/* <Menu width={140}>
-        <Menu.Target>
-          <Header_Btn_B disabled>커뮤니티</Header_Btn_B>
-        </Menu.Target>
-        <Menu.Dropdown>
-          <Menu.Item onClick={() => router.push('/community')}>
-            전체 글
-          </Menu.Item>
-          <Menu.Item onClick={() => router.push('/community/0')}>
-            방 구하기
-          </Menu.Item>
-          <Menu.Item onClick={() => router.push('/community/1')}>
-            방 양도하기
-          </Menu.Item>
-          <Menu.Item onClick={() => router.push('/community/2')}>
-            정보 게시판
-          </Menu.Item>
-          <Menu.Item onClick={() => router.push('/community/3')}>
-            자유 게시판
-          </Menu.Item>
-          <Menu.Divider />
-          <Menu.Item icon={<IconSearch size={15} />}>검색</Menu.Item>
-        </Menu.Dropdown>
-      </Menu> */}
-      <Header_Btn_B onClick={() => router.push('/mainMap')}>지도</Header_Btn_B>
-      <Header_Btn_B
-        onClick={() =>
-          status === 'authenticated'
-            ? router.push('/upload')
-            : router.push('/login')
-        }
-      >
-        방내놓기
-      </Header_Btn_B>
-      <Header_Btn_B
-        onClick={() =>
-          status === 'authenticated'
-            ? router.push('/wishlist')
-            : router.push('/login')
-        }
-      >
-        관심목록
-      </Header_Btn_B>
+    <Container>
+      <HomeLogo size={25} />
+      <div />
+      <MenuWrapper>
+        {MenuMap.map((menu, idx) => (
+          <HeaderMenu
+            key={menu.content}
+            onClick={() =>
+              router.push(
+                idx > 1
+                  ? status === 'authenticated'
+                    ? menu.href
+                    : '/login'
+                  : menu.href
+              )
+            }
+          >
+            {menu.content}
+          </HeaderMenu>
+        ))}
+      </MenuWrapper>
+      <div className="margin" />
       {status === 'authenticated' ? (
         <Menu width={140}>
           <Menu.Target>
-            <HoverDiv className="mr-3 ml-3">
+            <HeaderMenu>
               <Image
                 src={session.user?.image!}
                 alt="profile"
-                width={26}
-                height={26}
+                width={25}
+                height={25}
               />
-            </HoverDiv>
+            </HeaderMenu>
           </Menu.Target>
-          <Menu.Dropdown>
+          <Menu.Dropdown color="dark">
             <Menu.Item onClick={() => router.push('/upload?isManagePage=true')}>
               내 방 관리
             </Menu.Item>
-            {/* <Menu.Item>내가 쓴 글</Menu.Item> */}
             <Menu.Divider />
             <Menu.Item onClick={() => signOut()}>
               <Center2_Div>
-                <IconLogout size={15} className="mr-1" />
+                <IconLogout size={18} className="mr-1" />
                 로그아웃
               </Center2_Div>
             </Menu.Item>
           </Menu.Dropdown>
         </Menu>
       ) : (
-        <Header_Btn_B onClick={() => router.push('/login')}>
-          <IconUser size={15} className="mr-1" />
+        <HeaderMenu onClick={() => router.push('/login')}>
+          <IconUser size={20} className="mr-1" />
           로그인
-        </Header_Btn_B>
+        </HeaderMenu>
       )}
-    </Header_Div>
+    </Container>
   )
 }
 
-//Header
-export const Header_Div = styled.div`
-  min-width: 1000px;
-  display: flex;
-  align-items: center;
+const Container = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 2fr 4fr 1fr;
   padding: 20px;
-  font-size: 15px;
-  color: ${mainColor};
-  border-bottom: 0.5px solid ${mainColor};
+  border-bottom: 0.5px solid black;
   margin: 0 20px 0 20px;
+  @media (min-width: 576px) {
+    font-size: 0.8rem;
+  }
+  @media (min-width: 768px) {
+    font-size: 0.85rem;
+  }
+  @media (min-width: 992px) {
+    font-size: 0.9rem;
+  }
+  @media (min-width: 1200px) {
+    font-size: 1rem;
+  }
+
+  .margin {
+    display: none;
+    @media (max-width: 575px) {
+      display: inline;
+    }
+  }
 `
-export const Header_Btn_B = styled.button`
-  width: 70px;
-  margin: 5px;
+const MenuWrapper = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  @media (max-width: 575px) {
+    display: none;
+  }
+`
+const HeaderMenu = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  &:hover {
+    cursor: pointer;
+  }
 `
+
