@@ -1,11 +1,12 @@
-import { IconLogout, IconUser } from '@tabler/icons'
+import { IconLogout, IconMenu2, IconUser } from '@tabler/icons'
 import { signOut, useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import Image from 'next/image'
-import { Menu } from '@mantine/core'
+import { Drawer, Menu } from '@mantine/core'
 import HomeLogo from './home/HomeLogo'
-import { Center2_Div } from './styledComponent'
 import styled from '@emotion/styled'
+import { useDisclosure } from '@mantine/hooks'
+import Link from 'next/link'
 
 const MenuMap = [
   { content: '사업소개', href: '/introduce' },
@@ -17,72 +18,133 @@ const MenuMap = [
 export default function Header() {
   const router = useRouter()
   const { data: session, status } = useSession()
+  const [opened, { open, close }] = useDisclosure(false)
 
   return (
-    <Container>
-      <HomeLogo size={25} />
-      <div />
-      <MenuWrapper>
-        {MenuMap.map((menu, idx) => (
-          <HeaderMenu
-            key={menu.content}
-            onClick={() =>
-              router.push(
-                idx > 1
-                  ? status === 'authenticated'
-                    ? menu.href
-                    : '/login'
-                  : menu.href
-              )
-            }
-          >
-            {menu.content}
-          </HeaderMenu>
-        ))}
-      </MenuWrapper>
-      <div className="margin" />
-      {status === 'authenticated' ? (
-        <Menu width={140}>
-          <Menu.Target>
-            <HeaderMenu>
-              <Image
-                src={session.user?.image!}
-                alt="profile"
-                width={25}
-                height={25}
-              />
-            </HeaderMenu>
-          </Menu.Target>
-          <Menu.Dropdown color="dark">
-            <Menu.Item onClick={() => router.push('/upload?isManagePage=true')}>
-              내 방 관리
-            </Menu.Item>
-            <Menu.Divider />
-            <Menu.Item onClick={() => signOut()}>
-              <Center2_Div>
-                <IconLogout size={18} className="mr-1" />
-                로그아웃
-              </Center2_Div>
-            </Menu.Item>
-          </Menu.Dropdown>
-        </Menu>
-      ) : (
-        <HeaderMenu onClick={() => router.push('/login')}>
-          <IconUser size={20} className="mr-1" />
-          로그인
-        </HeaderMenu>
-      )}
-    </Container>
+    <>
+      <Container>
+        <HomeLogo size={25} />
+        <div />
+        <MenuWrapper>
+          {MenuMap.map((menu, idx) => (
+            <MenuBtn1
+              key={menu.content}
+              onClick={() =>
+                router.push(
+                  idx > 1
+                    ? status === 'authenticated'
+                      ? menu.href
+                      : '/login'
+                    : menu.href
+                )
+              }
+            >
+              {menu.content}
+            </MenuBtn1>
+          ))}
+        </MenuWrapper>
+        <MenuBtn2>
+          <IconMenu2 onClick={open} stroke={1} size={30} />
+        </MenuBtn2>
+        <LoginWrapper>
+          {status === 'authenticated' ? (
+            <Menu width={140}>
+              <Menu.Target>
+                <MenuBtn1>
+                  <Image
+                    src={session.user?.image!}
+                    alt="profile"
+                    width={28}
+                    height={28}
+                  />
+                </MenuBtn1>
+              </Menu.Target>
+              <Menu.Dropdown color="dark">
+                <Menu.Item
+                  onClick={() => router.push('/upload?isManagePage=true')}
+                >
+                  내 방 관리
+                </Menu.Item>
+                <Menu.Divider />
+                <Menu.Item onClick={() => signOut()}>
+                  <div className="flex items-center">
+                    <IconLogout size={18} className="mr-1" />
+                    로그아웃
+                  </div>
+                </Menu.Item>
+              </Menu.Dropdown>
+            </Menu>
+          ) : (
+            <MenuBtn1 onClick={() => router.push('/login')}>
+              <IconUser size={28} className="icon" />
+              <span className="login">로그인</span>
+            </MenuBtn1>
+          )}
+        </LoginWrapper>
+      </Container>
+      <Drawer opened={opened} onClose={close} position="top" size={200}>
+        <DrawerContainer>
+          <div className="border-r border-black">
+            {MenuMap.map((menu, idx) => (
+              <DrawerMenu
+                key={menu.content}
+                onClick={() =>
+                  router.push(
+                    idx > 1
+                      ? status === 'authenticated'
+                        ? menu.href
+                        : '/login'
+                      : menu.href
+                  )
+                }
+              >
+                {menu.content}
+              </DrawerMenu>
+            ))}
+          </div>
+          <div className="flex flex-col justify-center items-center">
+            {status === 'authenticated' ? (
+              <div className="flex flex-col justify-center items-center">
+                <Link href={'/upload?isManagePage=true'}>
+                  <div className="hover:cursor-pointer" onClick={close}>
+                    내 방 관리
+                  </div>
+                </Link>
+                <div
+                  className="flex justify-center mt-4 hover:cursor-pointer"
+                  onClick={() => signOut()}
+                >
+                  <IconLogout size={18} className="mr-1" />
+                  로그아웃
+                </div>
+              </div>
+            ) : (
+              <Link href={'/login'}>
+                <div
+                  className="hover:cursor-pointer flex flex-col items-center"
+                  onClick={close}
+                >
+                  <IconUser size={28} className="icon" />
+                  <span className="login">로그인</span>
+                </div>
+              </Link>
+            )}
+          </div>
+        </DrawerContainer>
+      </Drawer>
+    </>
   )
 }
 
 const Container = styled.div`
   display: grid;
-  grid-template-columns: 1fr 2fr 4fr 1fr;
-  padding: 20px;
+  align-items: center;
+  padding: 20px 0 20px 20px;
   border-bottom: 0.5px solid black;
   margin: 0 20px 0 20px;
+  grid-template-columns: 1fr 5fr 1fr;
   @media (min-width: 576px) {
+    grid-template-columns: 1fr 2fr 4fr 1fr;
     font-size: 0.8rem;
   }
   @media (min-width: 768px) {
@@ -109,12 +171,51 @@ const MenuWrapper = styled.div`
     display: none;
   }
 `
-const HeaderMenu = styled.div`
+const MenuBtn1 = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   &:hover {
     cursor: pointer;
   }
+  .icon {
+    @media (min-width: 576px) {
+      display: none;
+    }
+  }
+  .login {
+    @media (max-width: 575px) {
+      display: none;
+    }
+  }
 `
 
+const MenuBtn2 = styled.div`
+  display: none;
+  &:hover {
+    cursor: pointer;
+  }
+  @media (max-width: 575px) {
+    display: flex;
+    justify-content: right;
+  }
+`
+const LoginWrapper = styled.div`
+  @media (max-width: 575px) {
+    display: none;
+  }
+`
+const DrawerContainer = styled.div`
+  display: grid;
+  font-size: 0.85rem;
+  grid-template-columns: 2fr 1fr;
+`
+const DrawerMenu = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-bottom: 0.1rem;
+  &:hover {
+    cursor: pointer;
+    text-shadow: 1px 1px 1px gray;
+  }
+`
