@@ -113,10 +113,8 @@ export default function Home() {
 
   return (
     <Container>
-      <div className="sector" style={{ padding: '160px 60px 180px 60px' }}>
-        <div style={{ fontSize: '40px', fontWeight: '700' }}>
-          어떤 스팟을 찾으세요?
-        </div>
+      <div className="sector">
+        <div className="search">어떤 스팟을 찾으세요?</div>
         <Home_Search_Div style={{ margin: '30px 0 0 0' }}>
           <IconSearch size={21} />
           <Home_Input
@@ -205,11 +203,29 @@ export const Center_Div = styled(alignCenter)`
 const Container = styled.div`
   .sector {
     border-bottom: solid 0.5px black;
+    padding: 160px 25px 180px 25px;
+    margin: 0 15px 0 15px;
+  }
+  .search {
+    font-size: 1.5rem;
+    font-weight: 600;
+    @media (min-width: 576px) {
+      font-size: 1.75rem;
+      font-weight: 700;
+    }
+    @media (min-width: 768px) {
+      font-size: 2rem;
+      font-weight: 700;
+    }
+    @media (min-width: 992px) {
+    }
+    @media (min-width: 1200px) {
+    }
   }
   .title {
     font-size: 20px;
     font-weight: 300;
-    margin: 20px 0 40px 0;
+    margin: 20px 15px 40px 15px;
     position: relative;
   }
 `

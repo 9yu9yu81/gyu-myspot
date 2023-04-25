@@ -2,14 +2,13 @@ import Link from 'next/link'
 import { IconBrandGithub, IconBrandInstagram } from '@tabler/icons'
 import { useRouter } from 'next/router'
 import styled from '@emotion/styled'
-import { mainColor } from './styledComponent'
 import HomeLogo from './home/HomeLogo'
 
 export default function Footer() {
   const router = useRouter()
   return (
-    <Footer_Div>
-      <div className="border-t p-4">
+    <Container>
+      <MenuWrapper className="border-t p-4">
         <div className="flex space-x-3">
           <HomeLogo size={20} />
           <div className="flex items-center">
@@ -27,7 +26,7 @@ export default function Footer() {
             </div>
           </div>
         </div>
-      </div>
+      </MenuWrapper>
       <div className=" border-t border-zinc-300 pt-6 pb-2 mr-2 ml-2 pl-2">
         MySpot
         <br />
@@ -51,13 +50,17 @@ export default function Footer() {
           onClick={() => router.push('https://github.com/9yu9yu81/gyu-myspot')}
         />
       </div>
-    </Footer_Div>
+    </Container>
   )
 }
 
-const Footer_Div = styled.div`
-  min-width: 1000px;
-  font-size: 15px;
-  color: ${mainColor};
+const Container = styled.div`
   font-weight: 300;
+  font-size: 0.75rem;
+`
+
+const MenuWrapper = styled.div`
+  @media (max-width: 575px) {
+    display: none;
+  }
 `
