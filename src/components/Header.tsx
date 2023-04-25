@@ -39,7 +39,8 @@ export default function Header() {
                 )
               }
             >
-              {menu.content}
+              {' '}
+              {menu.content}{' '}
             </MenuBtn1>
           ))}
         </MenuWrapper>
@@ -145,10 +146,10 @@ const Container = styled.div`
   grid-template-columns: 1fr 5fr 1fr;
   @media (min-width: 576px) {
     grid-template-columns: 1fr 2fr 4fr 1fr;
-    font-size: 0.8rem;
+    font-size: 0.7rem;
   }
   @media (min-width: 768px) {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
   }
   @media (min-width: 992px) {
     font-size: 0.9rem;
@@ -172,6 +173,7 @@ const MenuWrapper = styled.div`
   }
 `
 const MenuBtn1 = styled.div`
+  margin: 0 0.3rem 0 0.3rem;
   display: flex;
   justify-content: center;
   align-items: center;

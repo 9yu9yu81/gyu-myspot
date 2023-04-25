@@ -219,7 +219,7 @@ export default function MainMap() {
     setOverlay({ id: room_id, isOpened: true })
   }
   return (
-    <MainMap_Container>
+    <Container>
       <Menu_Container>
         <Logo_Btn
           onClick={() => router.push('/')}
@@ -448,11 +448,11 @@ export default function MainMap() {
           </div>
         ))}
       </Map>
-    </MainMap_Container>
+    </Container>
   )
 }
 
-const MainMap_Container = styled.div`
+const Container = styled.div`
   position: relative;
 `
 
