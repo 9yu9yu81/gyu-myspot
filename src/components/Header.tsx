@@ -103,34 +103,26 @@ export default function Header() {
               </Link>
             ))}
           </div>
-          <div className="flex flex-col justify-center items-center">
+          <StyledMenuContainer>
             {status === 'authenticated' ? (
-              <div className="flex flex-col justify-center items-center">
+              <div>
                 <Link href={'/upload?isManagePage=true'}>
-                  <div className="hover:cursor-pointer" onClick={close}>
-                    내 방 관리
-                  </div>
+                  <StyledMenuItem onClick={close}>내 방 관리</StyledMenuItem>
                 </Link>
-                <div
-                  className="flex justify-center mt-4 hover:cursor-pointer"
-                  onClick={() => signOut()}
-                >
+                <StyledMenuItem onClick={() => signOut()}>
                   <IconLogout size={18} className="mr-1" />
                   로그아웃
-                </div>
+                </StyledMenuItem>
               </div>
             ) : (
               <Link href={'/login'}>
-                <div
-                  className="hover:cursor-pointer flex flex-col items-center"
-                  onClick={close}
-                >
+                <StyledMenuItem onClick={close}>
                   <IconUser size={28} className="icon" stroke={1.3} />
                   <span className="login">로그인</span>
-                </div>
+                </StyledMenuItem>
               </Link>
             )}
-          </div>
+          </StyledMenuContainer>
         </DrawerContainer>
       </Drawer>
     </>
@@ -222,4 +214,20 @@ const DrawerMenu = styled.div`
     cursor: pointer;
     text-shadow: 1px 1px 1px gray;
   }
+`
+
+const StyledMenuContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`
+
+const StyledMenuItem = styled.div`
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
 `
