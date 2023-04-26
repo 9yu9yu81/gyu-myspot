@@ -30,6 +30,10 @@ export default function App({
         <Head>
           <title>Myspot</title>
           <meta name="description" content="My Spot direct transaction" />
+          <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+          />
         </Head>
         {router.pathname === '/mainMap' ? (
           <div>

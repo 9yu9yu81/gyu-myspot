@@ -83,7 +83,7 @@ export default function Header() {
           )}
         </LoginWrapper>
       </Container>
-      <Drawer opened={opened} onClose={close} position="top" size={200}>
+      <Drawer opened={opened} onClose={close} position="top" size={190}>
         <DrawerContainer>
           <div className="border-r border-black">
             {MenuMap.map((menu, idx) => (
@@ -153,9 +153,11 @@ const Container = styled.div`
     font-size: 0.8rem;
   }
   @media (min-width: 992px) {
+    grid-template-columns: 1fr 3fr 4fr 1fr;
     font-size: 0.9rem;
   }
   @media (min-width: 1200px) {
+    grid-template-columns: 1fr 4fr 4fr 1fr;
     font-size: 1rem;
   }
 
