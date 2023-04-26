@@ -118,7 +118,7 @@ export default function Home() {
         <Home_Search_Div style={{ margin: '30px 0 0 0' }}>
           <IconSearch size={21} />
           <Home_Input
-            style={{ fontSize: '18px' }}
+            style={{ fontSize: '18px', width: '100%' }}
             value={keyword}
             onChange={handleChange}
             placeholder="주소나 건물명을 입력하세요"

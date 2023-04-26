@@ -5,7 +5,6 @@ import {
   Map,
   MapMarker,
   MarkerClusterer,
-  ZoomControl,
 } from 'react-kakao-maps-sdk'
 import styled from '@emotion/styled'
 import Image from 'next/image'
@@ -16,10 +15,12 @@ import {
   mainColor,
   subColor_Dark,
   subColor_light,
+  subColor_medium,
 } from 'components/styledComponent'
 import { CATEGORY_MAP, FILTERS, YEAR_MONTH_MAP } from 'constants/const'
 import {
   IconArrowDown,
+  IconCategory,
   IconHeart,
   IconSearch,
   IconSortDescending,
@@ -27,7 +28,7 @@ import {
 } from '@tabler/icons'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
-import { Home_Input, Home_Search_Div } from 'pages'
+import { Home_Input } from 'pages'
 import { Loader, Menu } from '@mantine/core'
 import { menuStyle } from 'pages/mainMap'
 
@@ -93,6 +94,13 @@ export default function Rooms() {
     if (!router.isReady) return
     setSearch(router.query.keyword as string)
   }, [router.isReady])
+  const [isOpen, setIsOpen] = useState(false)
+  const handleOpenModal = () => {
+    setIsOpen(true)
+  }
+  const handleCloseModal = () => {
+    setIsOpen(false)
+  }
 
   // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
   //   setKeyword(e.target.value)
@@ -257,11 +265,7 @@ export default function Rooms() {
         onCreate={setMap}
         level={level}
         center={{ lat: center.lat, lng: center.lng }}
-        style={{
-          width: '1000px',
-          height: '600px',
-          margin: '30px 0 30px 0',
-        }}
+        className="map"
         disableDoubleClick
         isPanto={true}
         onDragStart={() => setOverlay({ id: undefined, isOpened: false })}
@@ -269,7 +273,7 @@ export default function Rooms() {
         onIdle={(e) => onIdle(e)}
         onTileLoaded={(e) => onIdle(e)}
       >
-        <ZoomControl />
+        {/* <ZoomControl /> */}
         <MarkerClusterer
           averageCenter={true} // 클러스터에 포함된 마커들의 평균 위치를 클러스터 마커 위치로 설정
           minLevel={4} // 클러스터 할 최소 지도 레벨
@@ -357,7 +361,7 @@ export default function Rooms() {
           </div>
         ))}
       </Map>
-      <Room_Menu_div>
+      <MenuContainer>
         {(filter === 'expensive' || filter === 'cheap') && (
           <div
             style={{
@@ -371,23 +375,23 @@ export default function Rooms() {
             전세 매물은 제외된 리스트입니다.
           </div>
         )}
-        <Home_Search_Div style={{ minWidth: '350px' }}>
+        <SearchContainer>
           <IconSearch size={18} />
           <Home_Input
             style={{ fontSize: '16px' }}
-            // onChange={handleChange}
-            // value={keyword}
             ref={searchRef}
             placeholder="주소나 건물명을 입력하세요"
             onKeyUp={handleEnterKeypress}
           />
-        </Home_Search_Div>
+        </SearchContainer>
+        <div />
+        <MenuBtnContainer>
         <Menu width={160}>
           <Menu.Target>
-            <Hover_Menu>
+            <MenuBtn className="left">
               매물 종류
-              <IconArrowDown size={15} />
-            </Hover_Menu>
+              <IconArrowDown className='icon' size={15} />
+            </MenuBtn>
           </Menu.Target>
           <Menu.Dropdown>
             <Menu.Item
@@ -411,10 +415,10 @@ export default function Rooms() {
         </Menu>
         <Menu width={160}>
           <Menu.Target>
-            <Hover_Menu>
+            <MenuBtn>
               전세/월세
-              <IconArrowDown size={15} />
-            </Hover_Menu>
+              <IconArrowDown className='icon' size={15} />
+            </MenuBtn>
           </Menu.Target>
           <Menu.Dropdown>
             <Menu.Item
@@ -436,13 +440,12 @@ export default function Rooms() {
             ))}
           </Menu.Dropdown>
         </Menu>
-        <div style={{ marginLeft: 'auto' }} />
         <Menu width={160}>
           <Menu.Target>
-            <Hover_Menu>
+            <MenuBtn>
               정렬 기준
-              <IconSortDescending size={15} />
-            </Hover_Menu>
+              <IconSortDescending className='icon' size={15} />
+            </MenuBtn>
           </Menu.Target>
           <Menu.Dropdown>
             {FILTERS.map((item, idx) => (
@@ -457,10 +460,14 @@ export default function Rooms() {
             ))}
           </Menu.Dropdown>
         </Menu>
-      </Room_Menu_div>
+        </MenuBtnContainer>
+        <MenuIcon onClick={handleOpenModal}>
+          <IconCategory size={20} stroke={1.5} color="white" />
+        </MenuIcon>
+      </MenuContainer>
       <Grid_Container>
         {roomsLoading ? (
-          <Center_Div style={{ width: '1000px', padding: '100px' }}>
+          <Center_Div style={{ padding: '100px' }}>
             <Loader color="dark" />
           </Center_Div>
         ) : rooms && rooms.length !== 0 ? (
@@ -469,26 +476,24 @@ export default function Rooms() {
               map
                 ?.getBounds()
                 .contain(new kakao.maps.LatLng(room.lat, room.lng)) && (
-                <div key={`${room}-${room.id}`}>
-                  <Center_Div>
-                    <StyledImage
-                      style={{
-                        width: '300px',
-                        height: '225px',
-                      }}
-                    >
-                      <Link href={`rooms/${room.id}`}>
-                        <Image
-                          sizes="300px"
-                          className="styled"
-                          src={room.images.split(',')[0]}
-                          alt={'thumbnail'}
-                          fill
-                          // onClick={() => router.push(`rooms/${room.id}`)}
-                        />
-                      </Link>
-                    </StyledImage>
-                  </Center_Div>
+                <Center_Div className="flex-col" key={`${room}-${room.id}`}>
+                  <StyledImage
+                    style={{
+                      width: '300px',
+                      height: '225px',
+                    }}
+                  >
+                    <Link href={`rooms/${room.id}`}>
+                      <Image
+                        sizes="300px"
+                        className="styled"
+                        src={room.images.split(',')[0]}
+                        alt={'thumbnail'}
+                        fill
+                        // onClick={() => router.push(`rooms/${room.id}`)}
+                      />
+                    </Link>
+                  </StyledImage>
                   <div className="description">
                     <div className="name">
                       {room.name} {room.area}평
@@ -514,11 +519,11 @@ export default function Rooms() {
                     <div>{room.doro}</div>
                     <div>{room.title}</div>
                   </div>
-                </div>
+                </Center_Div>
               )
           )
         ) : (
-          <Center_Div style={{ width: '1000px', margin: '100px 0 100px 0' }}>
+          <Center_Div style={{ margin: '2rem 0' }}>
             현재 지도에 등록된 매물이 없습니다.
           </Center_Div>
         )}
@@ -536,13 +541,45 @@ export default function Rooms() {
   )
 }
 
-const Rooms_Container = styled.div`
+const Rooms_Container = styled(Center_Div)`
+  flex-flow: column;
   font-size: 17px;
+  padding: 1rem;
+  .map {
+    width: 100%;
+    height: 90vw;
+    @media (min-width: 576px) {
+      height: 70vw;
+    }
+    @media (min-width: 768px) {
+      height: 60vw;
+    }
+    @media (min-width: 992px) {
+      height: 55vw;
+    }
+    @media (min-width: 1200px) {
+      max-width: 1200px;
+      max-height: 800px;
+    }
+  }
 `
-const Room_Menu_div = styled(Center2_Div)`
+const MenuContainer = styled.div`
+  width: 100%;
+  margin: 1rem 0;
   position: relative;
-  column-gap: 60px;
-  margin: 30px 0 30px 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr 
+  @media (min-width: 576px) {
+  }
+  @media (min-width: 768px) {
+    grid-template-columns: 2fr 0fr 3fr;
+  }
+  @media (min-width: 992px) {
+    grid-template-columns: 2fr 1fr 3fr;
+  }
+  @media (min-width: 1200px) {
+    grid-template-columns: 2fr 1.5fr 3fr;
+  }
 `
 
 export const Overlay_Container = styled(Center_Div)`
@@ -590,23 +627,26 @@ export const Overlay_Container = styled(Center_Div)`
   }
 `
 
-export const Hover_Menu = styled.div`
+const MenuBtn = styled(Center_Div)`
   border-bottom: solid 0.5px ${mainColor};
-  display: flex;
-  justify-content: center;
-  align-items: center;
   :hover {
     cursor: pointer;
     border-bottom: solid 1px ${mainColor};
   }
   padding: 3px 3px 3px 5px;
   font-size: 16px;
-  min-width: 100px;
+  margin: 0 1rem;
+  .icon {
+    display: none;
+    @media (min-width: 576px) {
+      display: inline;
+    }
+  }
 `
 const Grid_Container = styled.div`
-  width: 1000px;
+  width: 100%;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(1, 1fr);
   grid-row-gap: 50px;
   grid-column-gap: 30px;
   * {
@@ -635,5 +675,51 @@ const Grid_Container = styled.div`
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+  @media (min-width: 576px) {
+  }
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @media (min-width: 992px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  @media (min-width: 1200px) {
+  }
+`
+
+const SearchContainer = styled(Center2_Div)`
+  :hover {
+    border: 0.5px solid black;
+  }
+  :active {
+    border: 1px solid black;
+  }
+  :focus {
+    outline: none !important;
+    border: 1px solid black;
+  }
+  border: 0.5px solid ${subColor_medium};
+  padding: 10px;
+`
+
+const MenuIcon = styled(Center_Div)`
+  :hover {
+    cursor: pointer;
+  }
+  margin-right: 0.5rem;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: black;
+  display: none;
+  @media (min-width: 576px) {
+  }
+`
+const MenuBtnContainer = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  @media (max-width: 767px) {
+    margin: 1rem 0 0.5rem 0;
   }
 `

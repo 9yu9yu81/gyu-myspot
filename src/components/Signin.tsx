@@ -41,7 +41,7 @@ const Container = styled(Centering)`
     height: 400px;
     border: 0.5px solid black;
     @media (max-width: 575px) {
-      width: 280px;
+      width: 290px;
       height: 300px;
     }
   }
