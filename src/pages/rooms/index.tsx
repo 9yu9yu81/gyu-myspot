@@ -386,92 +386,92 @@ export default function Rooms() {
         </SearchContainer>
         <div />
         <MenuBtnContainer>
-        <Menu width={160}>
-          <Menu.Target>
-            <MenuBtn className="left">
-              매물 종류
-              <IconArrowDown className='icon' size={15} />
-            </MenuBtn>
-          </Menu.Target>
-          <Menu.Dropdown>
-            <Menu.Item
-              style={menuStyle(category, 0)}
-              value={'0'}
-              onClick={() => setCategory('0')}
-            >
-              <Center_Div>전체</Center_Div>
-            </Menu.Item>
-            {CATEGORY_MAP.map((cat, idx) => (
+          <Menu width={160}>
+            <Menu.Target>
+              <MenuBtn className="left">
+                매물 종류
+                <IconArrowDown className="icon" size={15} />
+              </MenuBtn>
+            </Menu.Target>
+            <Menu.Dropdown>
               <Menu.Item
-                key={`${cat}-${idx}`}
-                value={idx}
-                onClick={() => setCategory(String(idx + 1))}
-                style={menuStyle(category, idx + 1)}
+                style={menuStyle(category, 0)}
+                value={'0'}
+                onClick={() => setCategory('0')}
               >
-                <Center_Div>{cat}</Center_Div>
+                <Center_Div>전체</Center_Div>
               </Menu.Item>
-            ))}
-          </Menu.Dropdown>
-        </Menu>
-        <Menu width={160}>
-          <Menu.Target>
-            <MenuBtn>
-              전세/월세
-              <IconArrowDown className='icon' size={15} />
-            </MenuBtn>
-          </Menu.Target>
-          <Menu.Dropdown>
-            <Menu.Item
-              style={menuStyle(ym, 0)}
-              value={0}
-              onClick={() => setYm('0')}
-            >
-              <Center_Div>전체</Center_Div>
-            </Menu.Item>
-            {YEAR_MONTH_MAP.map((item, idx) => (
+              {CATEGORY_MAP.map((cat, idx) => (
+                <Menu.Item
+                  key={`${cat}-${idx}`}
+                  value={idx}
+                  onClick={() => setCategory(String(idx + 1))}
+                  style={menuStyle(category, idx + 1)}
+                >
+                  <Center_Div>{cat}</Center_Div>
+                </Menu.Item>
+              ))}
+            </Menu.Dropdown>
+          </Menu>
+          <Menu width={160}>
+            <Menu.Target>
+              <MenuBtn>
+                전세/월세
+                <IconArrowDown className="icon" size={15} />
+              </MenuBtn>
+            </Menu.Target>
+            <Menu.Dropdown>
               <Menu.Item
-                style={menuStyle(ym, idx + 1)}
-                key={`${item}-${idx}`}
-                value={idx}
-                onClick={() => setYm(String(idx + 1))}
+                style={menuStyle(ym, 0)}
+                value={0}
+                onClick={() => setYm('0')}
               >
-                <Center_Div>{item}</Center_Div>
+                <Center_Div>전체</Center_Div>
               </Menu.Item>
-            ))}
-          </Menu.Dropdown>
-        </Menu>
-        <Menu width={160}>
-          <Menu.Target>
-            <MenuBtn>
-              정렬 기준
-              <IconSortDescending className='icon' size={15} />
-            </MenuBtn>
-          </Menu.Target>
-          <Menu.Dropdown>
-            {FILTERS.map((item, idx) => (
-              <Menu.Item
-                style={menuStyle(filter, item.value)}
-                key={`${item.label}-${idx}`}
-                value={item.value}
-                onClick={() => setFilter(item.value)}
-              >
-                <Center_Div>{item.label}</Center_Div>
-              </Menu.Item>
-            ))}
-          </Menu.Dropdown>
-        </Menu>
+              {YEAR_MONTH_MAP.map((item, idx) => (
+                <Menu.Item
+                  style={menuStyle(ym, idx + 1)}
+                  key={`${item}-${idx}`}
+                  value={idx}
+                  onClick={() => setYm(String(idx + 1))}
+                >
+                  <Center_Div>{item}</Center_Div>
+                </Menu.Item>
+              ))}
+            </Menu.Dropdown>
+          </Menu>
+          <Menu width={160}>
+            <Menu.Target>
+              <MenuBtn>
+                정렬 기준
+                <IconSortDescending className="icon" size={15} />
+              </MenuBtn>
+            </Menu.Target>
+            <Menu.Dropdown>
+              {FILTERS.map((item, idx) => (
+                <Menu.Item
+                  style={menuStyle(filter, item.value)}
+                  key={`${item.label}-${idx}`}
+                  value={item.value}
+                  onClick={() => setFilter(item.value)}
+                >
+                  <Center_Div>{item.label}</Center_Div>
+                </Menu.Item>
+              ))}
+            </Menu.Dropdown>
+          </Menu>
         </MenuBtnContainer>
         <MenuIcon onClick={handleOpenModal}>
           <IconCategory size={20} stroke={1.5} color="white" />
         </MenuIcon>
       </MenuContainer>
-      <Grid_Container>
-        {roomsLoading ? (
-          <Center_Div style={{ padding: '100px' }}>
-            <Loader color="dark" />
-          </Center_Div>
-        ) : rooms && rooms.length !== 0 ? (
-          rooms.map(
+      {roomsLoading ? (
+        <Center_Div style={{ padding: '100px', width: '100%' }}>
+          <Loader color="dark" />
+        </Center_Div>
+      ) : rooms && rooms.length !== 0 ? (
+        <Grid_Container>
+          {rooms.map(
             (room) =>
               map
                 ?.getBounds()
@@ -521,13 +521,13 @@ export default function Rooms() {
                   </div>
                 </Center_Div>
               )
-          )
-        ) : (
-          <Center_Div style={{ margin: '2rem 0' }}>
-            현재 지도에 등록된 매물이 없습니다.
-          </Center_Div>
-        )}
-      </Grid_Container>
+          )}
+        </Grid_Container>
+      ) : (
+        <Center_Div style={{ margin: '5rem 0' }}>
+          현재 지도에 등록된 매물이 없습니다.
+        </Center_Div>
+      )}
       {total && (
         <Center_Div style={{ margin: '30px 0 30px 0' }}>
           <CustomPagination
