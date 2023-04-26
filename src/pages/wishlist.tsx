@@ -328,7 +328,7 @@ const MenuContainer = styled.div`
       display: none;
     }
   }
-`
+` 
 
 const WishContainer = styled.div`
   display: grid;
