@@ -5,12 +5,12 @@ export default function CustomSegmentedControl({
   value,
   onChange,
   data,
+  size = 20,
 }: {
   value?: string
   onChange?: any
   data?: any
-  margin?: number
-  padding?: number
+  size?: number
 }) {
   return (
     <SegmentedControl
@@ -21,32 +21,32 @@ export default function CustomSegmentedControl({
       styles={() => ({
         root: {
           backgroundColor: 'white',
-          padding: '10px',
+          padding: `${size * 0.5}px`,
         },
         label: {
           border: `0.5px solid ${subColor_medium}`,
-          padding: '10px',
-          paddingRight: '20px',
-          paddingLeft: '20px',
-          fontSize: '13px',
+          padding: `${size * 0.5}px`,
+          paddingRight: `${size}px`,
+          paddingLeft: `${size}px`,
+          fontSize: `${size * 0.65}px`,
           color: `${mainColor}`,
           fontWeight: 'normal',
         },
         labelActive: {
           backgroundColor: `${mainColor}`,
-          padding: '10px',
-          paddingRight: '20px',
-          paddingLeft: '20px',
-          fontSize: '13px',
+          padding: `${size * 0.5}px`,
+          paddingRight: `${size}px`,
+          paddingLeft: `${size}px`,
+          fontSize: '${size * 0.65}px',
           color: `${subColor_lighter} !important`,
           fontWeight: 'normal',
         },
         control: {
           borderWidth: '0px !important',
-          paddingRight: '10px',
-          paddingLeft: '10px',
+          paddingRight: `${size * 0.5}px`,
+          paddingLeft: `${size * 0.5}px`,
         },
-        active: { backgroundColor: 'white', padding: '10px' },
+        active: { backgroundColor: 'white', padding: `${size * 0.5}px` },
       })}
       transitionDuration={0}
     />

@@ -5,21 +5,14 @@ import {
   Map,
   MapMarker,
   MarkerClusterer,
-  ZoomControl,
 } from 'react-kakao-maps-sdk'
 import styled from '@emotion/styled'
 import Image from 'next/image'
-import {
-  CHoverDiv,
-  Center2_Div,
-  Center_Div,
-  StyledImage,
-  mainColor,
-  subColor_light,
-} from 'components/styledComponent'
+import { StyledImage, subColor_light } from 'components/styledComponent'
 import { CATEGORY_MAP, YEAR_MONTH_MAP } from 'constants/const'
 import {
   IconArrowDown,
+  IconCategory,
   IconHeart,
   IconHome,
   IconLogout,
@@ -29,21 +22,21 @@ import {
 } from '@tabler/icons'
 import { signOut, useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
-import { Home_Input, Home_Search_Div } from 'pages'
-import { Menu } from '@mantine/core'
+import { Menu, Modal } from '@mantine/core'
 import { Overlay_Container } from './rooms'
 import Link from 'next/link'
+import CustomSegmentedControl from 'components/CustomSegmentedControl'
 
 export const menuStyle = (state: string, item: number | string) => {
   if (typeof item === 'number') {
     return {
-      backgroundColor: `${Number(state) === item ? mainColor : 'white'}`,
+      backgroundColor: `${Number(state) === item ? 'black' : 'white'}`,
       color: `${Number(state) === item ? subColor_light : 'black'}`,
     }
   }
   if (typeof item === 'string') {
     return {
-      backgroundColor: `${state === item ? mainColor : 'white'}`,
+      backgroundColor: `${state === item ? 'black' : 'white'}`,
       color: `${state === item ? subColor_light : 'black'}`,
     }
   }
@@ -92,6 +85,14 @@ export default function MainMap() {
   const { data: session, status } = useSession()
   const router = useRouter()
   const queryClient = useQueryClient()
+  const [isOpen, setIsOpen] = useState(false)
+
+  const handleOpenModal = () => {
+    setIsOpen(true)
+  }
+  const handleCloseModal = () => {
+    setIsOpen(false)
+  }
 
   const [category, setCategory] = useState<string>('0')
   const [ym, setYm] = useState<string>('0')
@@ -220,35 +221,25 @@ export default function MainMap() {
   }
   return (
     <Container>
-      <Menu_Container>
-        <Logo_Btn
-          onClick={() => router.push('/')}
-          style={{ marginRight: '10px' }}
-        >
+      <MenuContainer>
+        <MenuIcon onClick={() => router.push('/')}>
           <IconHome size={20} color="white" stroke={1.5} />
-        </Logo_Btn>
-        <Home_Search_Div
-          style={{
-            width: '500px',
-            backgroundColor: 'white',
-            border: `1px solid ${mainColor} `,
-          }}
-        >
+        </MenuIcon>
+        <SearchContainer>
           <IconSearch size={18} />
-          <Home_Input
-            style={{ fontSize: '14px' }}
+          <SearchWrapper
             value={keyword}
             onChange={handleChange}
             placeholder="주소나 건물명을 입력하세요"
             onKeyUp={handleEnterKeypress}
           />
-        </Home_Search_Div>
+        </SearchContainer>
         <Menu width={160}>
           <Menu.Target>
-            <Menu_Div style={{ width: '100px' }}>
+            <MenuBtn>
               매물 종류
-              <IconArrowDown size={15} />
-            </Menu_Div>
+              <IconArrowDown className="icon" size={15} />
+            </MenuBtn>
           </Menu.Target>
           <Menu.Dropdown>
             <Menu.Item
@@ -272,10 +263,10 @@ export default function MainMap() {
         </Menu>
         <Menu width={160}>
           <Menu.Target>
-            <Menu_Div style={{ width: '100px' }}>
+            <MenuBtn>
               전세/월세
-              <IconArrowDown size={15} />
-            </Menu_Div>
+              <IconArrowDown className="icon" size={15} />
+            </MenuBtn>
           </Menu.Target>
           <Menu.Dropdown>
             <Menu.Item
@@ -297,8 +288,10 @@ export default function MainMap() {
             ))}
           </Menu.Dropdown>
         </Menu>
-        <Logo_Btn
-          style={{ marginLeft: '20px' }}
+        <MenuIcon className="filter" onClick={handleOpenModal}>
+          <IconCategory size={20} stroke={1.5} color="white" />
+        </MenuIcon>
+        <MenuIcon
           onClick={() =>
             status === 'authenticated'
               ? router.push('/wishlist')
@@ -306,8 +299,8 @@ export default function MainMap() {
           }
         >
           <IconHeart size={20} stroke={1.5} color="white" />
-        </Logo_Btn>
-        <Logo_Btn style={{ marginLeft: '10px' }}>
+        </MenuIcon>
+        <MenuIcon>
           {status === 'authenticated' ? (
             <Menu width={120}>
               <Menu.Target>
@@ -342,14 +335,13 @@ export default function MainMap() {
               onClick={() => router.push('/login')}
             />
           )}
-        </Logo_Btn>
-      </Menu_Container>
+        </MenuIcon>
+      </MenuContainer>
       <Map
         onCreate={setMap}
         level={6}
         center={{ lat: center.lat, lng: center.lng }}
         style={{
-          minWidth: '1000px',
           width: '100vw',
           height: '100vh',
         }}
@@ -360,7 +352,6 @@ export default function MainMap() {
         onIdle={() => setSearch('')}
         onTileLoaded={() => setSearch('')}
       >
-        <ZoomControl />
         <MarkerClusterer
           averageCenter={true} // 클러스터에 포함된 마커들의 평균 위치를 클러스터 마커 위치로 설정
           minLevel={4} // 클러스터 할 최소 지도 레벨
@@ -448,37 +439,160 @@ export default function MainMap() {
           </div>
         ))}
       </Map>
+      <Modal
+        opened={isOpen}
+        onClose={handleCloseModal}
+        withCloseButton={false}
+        size={380}
+      >
+        <div className="flex flex-col">
+          <CustomSegmentedControl
+            size={18}
+            value={String(ym)}
+            onChange={setYm}
+            data={[
+              {
+                label: '전체',
+                value: '0',
+              },
+              ...YEAR_MONTH_MAP.map((label, idx) => ({
+                label: label,
+                value: String(idx + 1),
+              })),
+            ]}
+          />
+          <div className="border-b border-gray m-2 pl-2 pr-2" />
+          <CustomSegmentedControl
+            size={18}
+            value={String(category)}
+            onChange={setCategory}
+            data={[
+              {
+                label: '전체',
+                value: '0',
+              },
+              { label: '원룸', value: '1' },
+              { label: '투룸', value: '2' },
+            ]}
+          />
+          <CustomSegmentedControl
+            size={18}
+            value={String(category)}
+            onChange={setCategory}
+            data={[
+              { label: '쓰리룸', value: '3' },
+              { label: '오피스텔 ∙ 도시형', value: '4' },
+              { label: '그 외', value: '5' },
+            ]}
+          />
+        </div>
+      </Modal>
     </Container>
   )
 }
 
-const Container = styled.div`
-  position: relative;
+export const Center_Div = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
+export const Center2_Div = styled.div`
+  display: flex;
+  align-items: center;
 `
 
-const Menu_Container = styled(Center2_Div)`
+const Container = styled.div`
+  position: relative;
+  media (max-width: 575px) {
+    width: 100%;
+    height: 100%;
+  }
+`
+
+const MenuContainer = styled(Center2_Div)`
   display: flex;
-  margin: 10px;
+  width: 100%;
+  margin: 0.5rem 0 0.5rem 0;
   position: absolute;
   top: 0;
   left: 0;
   z-index: 2;
+  padding: 0 0.5rem 0 0.5rem;
 `
-const Menu_Div = styled.div`
-  display: flex;
-  background-color: ${mainColor};
+const MenuBtn = styled(Center_Div)`
+  background-color: black;
   color: ${subColor_light};
   padding: 10px 15px 10px 20px;
   font-size: 13px;
-  margin: 0 0 0 20px;
+  margin: 0 5px 0 5px;
   :hover {
     cursor: pointer;
   }
+  @media (max-width: 767px) {
+  }
+  @media (max-width: 991px) {
+    display: none;
+  }
+  width: 5rem;
 `
 
-const Logo_Btn = styled(CHoverDiv)`
+const MenuIcon = styled(Center_Div)`
+  :hover {
+    cursor: pointer;
+  }
+  margin-right: 0.5rem;
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background-color: ${mainColor};
+  background-color: black;
+  @media (min-width: 992px) {
+    &.filter {
+      display: none;
+    }
+  }
+`
+
+const SearchContainer = styled(Center2_Div)`
+  margin-right: 0.5rem;
+  :hover {
+    border: 0.5px solid black;
+  }
+  :active {
+    border: 1px solid black;
+  }
+  :focus {
+    outline: none !important;
+    border: 1px solid black;
+  }
+  padding: 0.5rem;
+  background-color: white;
+  border: 0.5px solid black;
+
+  width: 150px;
+  @media (min-width: 576px) {
+    width: 300px;
+  }
+  @media (min-width: 768px) {
+    width: 400px;
+  }
+  @media (min-width: 992px) {
+    width: 500px;
+  }
+  @media (min-width: 1200px) {
+    width: 600px;
+  }
+`
+
+const SearchWrapper = styled.input`
+  margin: 0 10px 0 10px;
+  width: 100%;
+  font-size: 0.7rem;
+  :focus {
+    outline: none !important;
+  }
+  @media (max-width: 576px) {
+    &::placeholder {
+      visibility: hidden;
+    }
+  }
 `

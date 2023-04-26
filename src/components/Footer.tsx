@@ -1,10 +1,5 @@
 import Link from 'next/link'
-import {
-  IconBrandGithub,
-  IconBrandInstagram,
-  IconMenu,
-  IconMenu2,
-} from '@tabler/icons'
+import { IconBrandGithub, IconBrandInstagram, IconMenu2 } from '@tabler/icons'
 import { useRouter } from 'next/router'
 import styled from '@emotion/styled'
 import HomeLogo from './home/HomeLogo'

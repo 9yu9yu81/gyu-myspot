@@ -125,7 +125,7 @@ export default function Header() {
                   className="hover:cursor-pointer flex flex-col items-center"
                   onClick={close}
                 >
-                  <IconUser size={28} className="icon" />
+                  <IconUser size={28} className="icon" stroke={1.3} />
                   <span className="login">로그인</span>
                 </div>
               </Link>
