@@ -1,6 +1,7 @@
-import { Loader, SegmentedControl } from '@mantine/core'
+import { Loader, Menu, SegmentedControl } from '@mantine/core'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
+  Center2_Div,
   Center_Div,
   StyledImage,
   mainColor,
@@ -9,11 +10,12 @@ import {
 import { CATEGORY_MAP, YEAR_MONTH_MAP } from 'constants/const'
 import { useState } from 'react'
 import Image from 'next/image'
-import { IconHeart } from '@tabler/icons'
+import { IconArrowDown, IconHeart } from '@tabler/icons'
 import { useSession } from 'next-auth/react'
 import styled from '@emotion/styled'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
+import { menuStyle } from './mainMap'
 const CustomPagination = dynamic(() => import('components/CustomPagination'))
 
 interface WishedRoom {
@@ -137,26 +139,23 @@ export default function wishlist() {
   }
 
   return status === 'authenticated' ? (
-    <div style={{ width: '1000px' }}>
-      <div
-        style={{ margin: '40px 0 20px 0', fontSize: '17px', display: 'flex' }}
-      >
+    <Container>
+      <CountContainer>
         관심 매물
         {countLoading ? (
-          <Center_Div style={{ margin: '0 10px 0 10px' }}>
+          <Center_Div className="loader">
             <Loader color="dark" size={15} />
           </Center_Div>
         ) : (
-          <div style={{ fontWeight: '700', margin: '0 10px 0 10px' }}>
-            {count}
-          </div>
+          <div className="count">{count}</div>
         )}
         개
-      </div>
-      <div
+      </CountContainer>
+      <MenuContainer
         style={{ display: 'flex', flexFlow: 'column', margin: '0 0 30px 0' }}
       >
         <SegmentedControl
+          className="seg"
           value={category}
           onChange={setCategory}
           styles={scStyles}
@@ -173,6 +172,7 @@ export default function wishlist() {
           ]}
         />
         <SegmentedControl
+          className="seg"
           value={ym}
           onChange={setYm}
           styles={scStyles}
@@ -188,7 +188,63 @@ export default function wishlist() {
             })),
           ]}
         />
-      </div>
+        <Center_Div className="btn">
+          <Menu width={160}>
+            <Menu.Target>
+              <MenuBtn>
+                매물 종류
+                <IconArrowDown size={15} />
+              </MenuBtn>
+            </Menu.Target>
+            <Menu.Dropdown>
+              <Menu.Item
+                style={menuStyle(category, 0)}
+                value={'0'}
+                onClick={() => setCategory('0')}
+              >
+                <Center_Div>전체</Center_Div>
+              </Menu.Item>
+              {CATEGORY_MAP.map((cat, idx) => (
+                <Menu.Item
+                  key={`${cat}-${idx}`}
+                  value={idx}
+                  onClick={() => setCategory(String(idx + 1))}
+                  style={menuStyle(category, idx + 1)}
+                >
+                  <Center_Div>{cat}</Center_Div>
+                </Menu.Item>
+              ))}
+            </Menu.Dropdown>
+          </Menu>
+          <Menu width={160}>
+            <Menu.Target>
+              <MenuBtn>
+                전세/월세
+                <IconArrowDown size={15} />
+              </MenuBtn>
+            </Menu.Target>
+            <Menu.Dropdown>
+              <Menu.Item
+                style={menuStyle(ym, 0)}
+                value={0}
+                onClick={() => setYm('0')}
+              >
+                <Center_Div>전체</Center_Div>
+              </Menu.Item>
+              {YEAR_MONTH_MAP.map((item, idx) => (
+                <Menu.Item
+                  style={menuStyle(ym, idx + 1)}
+                  key={`${item}-${idx}`}
+                  value={idx}
+                  onClick={() => setYm(String(idx + 1))}
+                >
+                  <Center_Div>{item}</Center_Div>
+                </Menu.Item>
+              ))}
+            </Menu.Dropdown>
+          </Menu>
+        </Center_Div>
+      </MenuContainer>
       {isLoading ? (
         <Center_Div style={{ margin: '100px 0 100px 0' }}>
           <Loader color="dark" />
@@ -197,33 +253,35 @@ export default function wishlist() {
         <div>
           <WishContainer>
             {wishlists.map((wishlist, idx) => (
-              <WishWrapper key={idx}>
-                <StyledImage style={{ width: '313px', height: '234px' }}>
-                  <Link href={`rooms/${wishlist.id}`}>
-                    <Image
-                      sizes="313px"
-                      className="styled"
-                      alt="img"
-                      src={wishlist.images.split(',')[0]}
-                      fill
-                    />
-                  </Link>
-                </StyledImage>
-                <div className="main">
-                  {CATEGORY_MAP[wishlist.category_id - 1]}{' '}
-                  {YEAR_MONTH_MAP[wishlist.sType_id - 1]} {wishlist.deposit}
-                  {wishlist.sType_id !== 1 && '/' + wishlist.fee}
-                  <div className="heart">
-                    <IconHeart
-                      color="red"
-                      fill="red"
-                      onClick={() => delWishlist(wishlist.id)}
-                    />
+              <Center_Div>
+                <WishWrapper key={idx}>
+                  <StyledImage style={{ width: '313px', height: '234px' }}>
+                    <Link href={`rooms/${wishlist.id}`}>
+                      <Image
+                        sizes="313px"
+                        className="styled"
+                        alt="img"
+                        src={wishlist.images.split(',')[0]}
+                        fill
+                      />
+                    </Link>
+                  </StyledImage>
+                  <div className="main">
+                    {CATEGORY_MAP[wishlist.category_id - 1]}{' '}
+                    {YEAR_MONTH_MAP[wishlist.sType_id - 1]} {wishlist.deposit}
+                    {wishlist.sType_id !== 1 && '/' + wishlist.fee}
+                    <div className="heart">
+                      <IconHeart
+                        color="red"
+                        fill="red"
+                        onClick={() => delWishlist(wishlist.id)}
+                      />
+                    </div>
                   </div>
-                </div>
-                <div>{wishlist.doro}</div>
-                <div>{wishlist.title}</div>
-              </WishWrapper>
+                  <div>{wishlist.doro}</div>
+                  <div>{wishlist.title}</div>
+                </WishWrapper>
+              </Center_Div>
             ))}
           </WishContainer>
           {total && (
@@ -239,21 +297,48 @@ export default function wishlist() {
       ) : (
         <Center_Div>관심 목록이 비어있습니다.</Center_Div>
       )}
-    </div>
+    </Container>
   ) : (
     <Center_Div className="m-40">로그인이 필요합니다.</Center_Div>
   )
 }
+const Container = styled.div``
+const CountContainer = styled.div`
+  margin: 2rem 0 1rem 1rem;
+  font-size: 17px;
+  display: flex;
+  .loader {
+    margin: 0 10px;
+  }
+  .count {
+    font-weight: 700;
+    margin: 0 10px;
+  }
+`
+const MenuContainer = styled.div`
+  .seg {
+    display: none;
+  }
+
+  @media (min-width: 768px) {
+    .seg {
+      display: flex;
+    }
+    .btn {
+      display: none;
+    }
+  }
+`
 
 const WishContainer = styled.div`
-  width: 1000px;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(3, 1fr);
-  grid-row-gap: 30px;
-  grid-column-gap: 30px;
-  * {
-    font-size: 15px;
+  grid-template-columns: repeat(1, 1fr);
+  font-size: 0.75rem;
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @media (min-width: 992px) {
+    grid-template-columns: repeat(3, 1fr);
   }
 `
 const WishWrapper = styled.div`
@@ -283,4 +368,16 @@ const WishWrapper = styled.div`
       cursor: pointer;
     }
   }
+`
+
+const MenuBtn = styled(Center_Div)`
+  background-color: black;
+  color: ${subColor_light};
+  padding: 10px 15px 10px 20px;
+  font-size: 13px;
+  margin: 0 1rem;
+  :hover {
+    cursor: pointer;
+  }
+  width: 6.5rem;
 `
