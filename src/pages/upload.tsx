@@ -33,7 +33,6 @@ import { add, differenceInDays, sub } from 'date-fns'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { menuStyle } from './mainMap'
-import { MenuBtn } from './wishlist'
 const Map = dynamic(import('components/MapN'))
 const UploadCaveats = dynamic(import('components/upload/UploadCaveats'))
 const CustomSegmentedControl = dynamic(
@@ -573,7 +572,7 @@ export default function Upload() {
             <Upload_Div_Title>매물 정보</Upload_Div_Title>
             <Upload_Div_Bt>
               <Upload_Div_Sub_Title>매물 종류</Upload_Div_Sub_Title>
-              <Center2_Div className='seg'>
+              <Center2_Div className="seg">
                 <CustomSegmentedControl
                   value={String(category)}
                   onChange={setCategory}
@@ -582,38 +581,33 @@ export default function Upload() {
                     value: String(idx + 1),
                   }))}
                 />
-          <Menu width={160}>
-            <Menu.Target>
-              <MenuBtn>
-                매물 종류
-                <IconArrowDown size={15} />
-              </MenuBtn>
-            </Menu.Target>
-            <Menu.Dropdown>
-              <Menu.Item
-                style={menuStyle(category, 0)}
-                value={'0'}
-                onClick={() => setCategory('0')}
-              >
-                <Center_Div>전체</Center_Div>
-              </Menu.Item>
-              {CATEGORY_MAP.map((cat, idx) => (
-                <Menu.Item
-                  key={`${cat}-${idx}`}
-                  value={idx}
-                  onClick={() => setCategory(String(idx + 1))}
-                  style={menuStyle(category, idx + 1)}
-                >
-                  <Center_Div>{cat}</Center_Div>
-                </Menu.Item>
-              ))}
-            </Menu.Dropdown>
-          </Menu>
               </Center2_Div>
+              <Center_Div className="menubtn" style={{ padding: '0.2rem' }}>
+                <Menu width={160}>
+                  <Menu.Target>
+                    <MenuBtn>
+                      {CATEGORY_MAP[Number(category) - 1]}
+                      <IconArrowDown size={15} />
+                    </MenuBtn>
+                  </Menu.Target>
+                  <Menu.Dropdown>
+                    {CATEGORY_MAP.map((cat, idx) => (
+                      <Menu.Item
+                        key={`${cat}-${idx}`}
+                        value={idx}
+                        onClick={() => setCategory(String(idx + 1))}
+                        style={menuStyle(category, idx + 1)}
+                      >
+                        <Center_Div>{cat}</Center_Div>
+                      </Menu.Item>
+                    ))}
+                  </Menu.Dropdown>
+                </Menu>
+              </Center_Div>
             </Upload_Div_Bt>
             <Upload_Div_Bt>
               <Upload_Div_Sub_Title>건물 유형</Upload_Div_Sub_Title>
-              <Center2_Div className='seg'>
+              <Center2_Div className="seg">
                 <CustomSegmentedControl
                   value={String(roomType)}
                   onChange={setRoomType}
@@ -623,6 +617,28 @@ export default function Upload() {
                   }))}
                 />
               </Center2_Div>
+              <Center_Div className="menubtn" style={{ padding: '0.2rem' }}>
+                <Menu width={160}>
+                  <Menu.Target>
+                    <MenuBtn>
+                      {TYPE_MAP[Number(roomType) - 1]}
+                      <IconArrowDown size={15} />
+                    </MenuBtn>
+                  </Menu.Target>
+                  <Menu.Dropdown>
+                    {TYPE_MAP.map((item, idx) => (
+                      <Menu.Item
+                        key={`${item}-${idx}`}
+                        value={idx}
+                        onClick={() => setRoomType(String(idx + 1))}
+                        style={menuStyle(roomType, idx + 1)}
+                      >
+                        <Center_Div>{item}</Center_Div>
+                      </Menu.Item>
+                    ))}
+                  </Menu.Dropdown>
+                </Menu>
+              </Center_Div>
             </Upload_Div_Bt>
           </Upload_Div_B>
           <Upload_Div_B className="relative">
@@ -1378,7 +1394,12 @@ const Upload_Div_Bt = styled.div`
   grid-template-columns: 1fr 4fr;
   @media (max-width: 767px) {
     grid-template-columns: 1fr 2fr;
-    .seg{
+    .seg {
+      display: none;
+    }
+  }
+  @media (min-width: 768px) {
+    .menubtn {
       display: none;
     }
   }
@@ -1467,4 +1488,16 @@ export const Manage_Div_Id = styled.div`
   border-radius: 2px;
   margin-bottom: 10px;
   color: ${subColor_Dark};
+`
+
+const MenuBtn = styled(Center_Div)`
+  background-color: black;
+  color: ${subColor_light};
+  padding: 10px 15px 10px 20px;
+  font-size: 13px;
+  margin: 0 1rem;
+  :hover {
+    cursor: pointer;
+  }
+  width: 6.5rem;
 `
