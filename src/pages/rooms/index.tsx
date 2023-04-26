@@ -20,7 +20,6 @@ import {
 import { CATEGORY_MAP, FILTERS, YEAR_MONTH_MAP } from 'constants/const'
 import {
   IconArrowDown,
-  IconCategory,
   IconHeart,
   IconSearch,
   IconSortDescending,
@@ -94,13 +93,6 @@ export default function Rooms() {
     if (!router.isReady) return
     setSearch(router.query.keyword as string)
   }, [router.isReady])
-  const [isOpen, setIsOpen] = useState(false)
-  const handleOpenModal = () => {
-    setIsOpen(true)
-  }
-  const handleCloseModal = () => {
-    setIsOpen(false)
-  }
 
   // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
   //   setKeyword(e.target.value)
@@ -461,9 +453,6 @@ export default function Rooms() {
             </Menu.Dropdown>
           </Menu>
         </MenuBtnContainer>
-        <MenuIcon onClick={handleOpenModal}>
-          <IconCategory size={20} stroke={1.5} color="white" />
-        </MenuIcon>
       </MenuContainer>
       {roomsLoading ? (
         <Center_Div style={{ padding: '100px', width: '100%' }}>
@@ -568,8 +557,10 @@ const MenuContainer = styled.div`
   margin: 1rem 0;
   position: relative;
   display: grid;
-  grid-template-columns: 1fr 1fr 
-  @media (min-width: 576px) {
+  grid-template-columns:
+    1fr 1fr
+    @media (min-width: 576px) {
+
   }
   @media (min-width: 768px) {
     grid-template-columns: 2fr 0fr 3fr;
@@ -703,19 +694,6 @@ const SearchContainer = styled(Center2_Div)`
   padding: 10px;
 `
 
-const MenuIcon = styled(Center_Div)`
-  :hover {
-    cursor: pointer;
-  }
-  margin-right: 0.5rem;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background-color: black;
-  display: none;
-  @media (min-width: 576px) {
-  }
-`
 const MenuBtnContainer = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;

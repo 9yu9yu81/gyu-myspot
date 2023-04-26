@@ -370,7 +370,7 @@ const WishWrapper = styled.div`
   }
 `
 
-const MenuBtn = styled(Center_Div)`
+export const MenuBtn = styled(Center_Div)`
   background-color: black;
   color: ${subColor_light};
   padding: 10px 15px 10px 20px;

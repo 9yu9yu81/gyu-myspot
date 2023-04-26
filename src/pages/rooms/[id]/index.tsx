@@ -205,14 +205,13 @@ export default function RoomIndex(room: RoomAllData) {
   )
 
   return (
-    <Info_Div>
+    <Container>
       <Img_Wrapper>
         <Modal
           opened={modal}
           onClose={() => setModal(false)}
           withCloseButton={false}
           centered
-          size={1000}
         >
           <Carousel
             slideIndex={imgIndex}
@@ -395,7 +394,7 @@ export default function RoomIndex(room: RoomAllData) {
             </Info_Div_Bg>
           </Info_Div1_Col>
         </div>
-        <Info_Div_Card>
+        <CardContainer>
           <div style={{ display: 'flex' }}>
             <Manage_Div_Id>매물번호 {room.id}</Manage_Div_Id>
           </div>
@@ -419,20 +418,20 @@ export default function RoomIndex(room: RoomAllData) {
             >
               매물 조회수 {room.views + 1} 회
             </div>
-            <Card_Img_Container>
-              <Card_Img_Wrapper>
+            <CardImgContainer>
+              <CardImg>
                 <Card_img src="/icons/elevator.png" />
                 {room.floor} 층
-              </Card_Img_Wrapper>
-              <Card_Img_Wrapper>
+              </CardImg>
+              <CardImg>
                 <Card_img src="/icons/house-design.png" />
                 {room.area} 평
-              </Card_Img_Wrapper>
-              <Card_Img_Wrapper>
+              </CardImg>
+              <CardImg>
                 <Card_img src="/icons/bill.png" />
                 {room.maintenance_fee} 만 원
-              </Card_Img_Wrapper>
-            </Card_Img_Container>
+              </CardImg>
+            </CardImgContainer>
             <div style={{ display: 'flex' }}>
               <div style={{ fontWeight: '700', minWidth: '60px' }}>방 유형</div>
               <div>{CATEGORY_MAP[room.category_id - 1]}</div>
@@ -508,9 +507,9 @@ export default function RoomIndex(room: RoomAllData) {
               {STATUS_MAP[room.status_id - 1]}
             </div>
           )}
-        </Info_Div_Card>
+        </CardContainer>
       </div>
-    </Info_Div>
+    </Container>
   )
 }
 const Card_img = ({ src }: { src: string }) => {
@@ -533,7 +532,15 @@ export const Center2_Div = styled.div`
   display: flex;
   align-items: center;
 `
-const Card_Img_Wrapper = styled(Center2_Div)`
+const Container = styled(Center_Div)`
+  flex-flow: column;
+  margin: 30px 0 30px 0;
+  * {
+    color: ${mainColor};
+    font-size: 16px;
+  }
+`
+const CardImg = styled(Center2_Div)`
   width: 120px;
   font-size: 16px;
 `
@@ -557,14 +564,6 @@ const Img_Btn = styled.button`
   bottom: 10px;
   background-color: ${subColor_lighter};
   font-size: 13px;
-`
-const Info_Div = styled.div`
-  margin: 30px 0 30px 0;
-  * {
-    color: ${mainColor};
-    font-size: 16px;
-  }
-  width: 1000px;
 `
 const Info_Div1 = styled.div`
   width: 670px;
@@ -615,7 +614,7 @@ const Info_Div_Option = styled(Center_Div)`
   margin: 10px 20px 20px 0;
 `
 
-const Info_Div_Card = styled.div`
+const CardContainer = styled.div`
   width: 300px;
   height: 430px;
   padding: 30px;
@@ -640,7 +639,7 @@ export const Manage_Div_Id = styled(Center_Div)`
   color: ${subColor_Dark};
 `
 
-const Card_Img_Container = styled.div`
+const CardImgContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 120px);
   grid-template-rows: repeat(2, 40px);

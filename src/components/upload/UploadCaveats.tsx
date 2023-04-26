@@ -1,5 +1,9 @@
 import styled from '@emotion/styled'
-import { subColor_Dark, subColor_lighter } from 'components/styledComponent'
+import {
+  subColor_Dark,
+  subColor_light,
+  subColor_lighter,
+} from 'components/styledComponent'
 
 export default function UploadCaveat({
   manage,
@@ -38,13 +42,12 @@ export default function UploadCaveat({
 
 const CaveatDiv = styled.div`
   color: ${subColor_Dark} !important;
-  background-color: ${subColor_lighter};
-  min-width: 990px;
-  width: 990px;
+  background-color: ${subColor_light};
+  width: 100%;
   line-height: 2;
   font-size: 14px;
-  padding: 20px;
-  margin: 5px;
+  padding: 1rem;
+  margin: 1rem;
   display: flex;
   border-radius: 5px;
 `

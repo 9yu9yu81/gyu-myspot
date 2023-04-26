@@ -1,11 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
-import { Chip, FileButton, Loader, Modal } from '@mantine/core'
-import { IconExclamationCircle, IconMapPin, IconX } from '@tabler/icons'
+import { Chip, FileButton, Loader, Menu, Modal } from '@mantine/core'
+import { IconArrowDown, IconExclamationCircle, IconMapPin, IconX } from '@tabler/icons'
 import {
+  Center_Div,
+  Center2_Div,
   HoverDiv,
   StyledImage,
-  mainColor,
   subColor_Dark,
   subColor_light,
   subColor_lighter,
@@ -31,6 +32,8 @@ import { Calendar } from '@mantine/dates'
 import { add, differenceInDays, sub } from 'date-fns'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
+import { menuStyle } from './mainMap'
+import { MenuBtn } from './wishlist'
 const Map = dynamic(import('components/MapN'))
 const UploadCaveats = dynamic(import('components/upload/UploadCaveats'))
 const CustomSegmentedControl = dynamic(
@@ -104,8 +107,8 @@ interface ManagedRoom {
   area: number
 }
 
-interface RoomStatus{
-  id: number,
+interface RoomStatus {
+  id: number
   status_id: number
 }
 
@@ -553,24 +556,24 @@ export default function Upload() {
     }
   )
   return session ? (
-    <div>
+    <Container>
       <HomeLogo size={50} margin={100} />
       {isUploadPage ? (
         <>
-          <Center_Div2 className="mb-5">
+          <Center_Div style={{ width: '100%' }}>
             <Upload_Btn_Dark onClick={() => setIsUploadPage(true)}>
               방 내놓기
             </Upload_Btn_Dark>
             <Upload_Btn_Bright onClick={() => setIsUploadPage(false)}>
               내 방 관리
             </Upload_Btn_Bright>
-          </Center_Div2>
+          </Center_Div>
           <UploadCaveats />
           <Upload_Div_B>
             <Upload_Div_Title>매물 정보</Upload_Div_Title>
             <Upload_Div_Bt>
               <Upload_Div_Sub_Title>매물 종류</Upload_Div_Sub_Title>
-              <Upload_Div_Sub>
+              <Center2_Div className='seg'>
                 <CustomSegmentedControl
                   value={String(category)}
                   onChange={setCategory}
@@ -579,11 +582,38 @@ export default function Upload() {
                     value: String(idx + 1),
                   }))}
                 />
-              </Upload_Div_Sub>
+          <Menu width={160}>
+            <Menu.Target>
+              <MenuBtn>
+                매물 종류
+                <IconArrowDown size={15} />
+              </MenuBtn>
+            </Menu.Target>
+            <Menu.Dropdown>
+              <Menu.Item
+                style={menuStyle(category, 0)}
+                value={'0'}
+                onClick={() => setCategory('0')}
+              >
+                <Center_Div>전체</Center_Div>
+              </Menu.Item>
+              {CATEGORY_MAP.map((cat, idx) => (
+                <Menu.Item
+                  key={`${cat}-${idx}`}
+                  value={idx}
+                  onClick={() => setCategory(String(idx + 1))}
+                  style={menuStyle(category, idx + 1)}
+                >
+                  <Center_Div>{cat}</Center_Div>
+                </Menu.Item>
+              ))}
+            </Menu.Dropdown>
+          </Menu>
+              </Center2_Div>
             </Upload_Div_Bt>
             <Upload_Div_Bt>
               <Upload_Div_Sub_Title>건물 유형</Upload_Div_Sub_Title>
-              <Upload_Div_Sub>
+              <Center2_Div className='seg'>
                 <CustomSegmentedControl
                   value={String(roomType)}
                   onChange={setRoomType}
@@ -592,7 +622,7 @@ export default function Upload() {
                     value: String(idx + 1),
                   }))}
                 />
-              </Upload_Div_Sub>
+              </Center2_Div>
             </Upload_Div_Bt>
           </Upload_Div_B>
           <Upload_Div_B className="relative">
@@ -604,15 +634,15 @@ export default function Upload() {
               <Upload_Div_Sub_Title>주소</Upload_Div_Sub_Title>
               <Upload_Div_Sub style={{ padding: '35px' }}>
                 <div>
-                  <Center_Div2 className="font-light">
+                  <Center2_Div className="font-light">
                     <IconExclamationCircle
                       className="mr-1"
                       size={18}
                       stroke={1.5}
                     />
                     도로명, 건물명, 지번에 대해 통합검색이 가능합니다.
-                  </Center_Div2>
-                  <Center_Div2>
+                  </Center2_Div>
+                  <Center2_Div>
                     <Upload_Input1
                       type="text"
                       placeholder="예) 번동 10-1, 강북구 번동"
@@ -625,7 +655,7 @@ export default function Upload() {
                     >
                       주소 검색
                     </Upload_Btn_Submit>
-                  </Center_Div2>
+                  </Center2_Div>
                   <Upload_Textarea1
                     placeholder={DETAILADDR_PLACEHOLDER}
                     ref={detailAddrRef}
@@ -793,9 +823,9 @@ export default function Upload() {
                 날짜 선택
               </Upload_Btn_Outline1>
               {moveIn && (
-                <Center_Div2 style={{ marginLeft: '10px' }}>
+                <Center2_Div style={{ marginLeft: '10px' }}>
                   {format(moveIn, 'yyyy년 MM월 dd일')}
-                </Center_Div2>
+                </Center2_Div>
               )}
             </Upload_Div_Bt>
           </Upload_Div_B>
@@ -1023,13 +1053,13 @@ export default function Upload() {
                 </div>
               </div>
             </div>
-            <Center_Div2 className="m-3">
+            <Center2_Div className="m-3">
               <IconExclamationCircle size={18} className="mr-1" />
               <div style={{ fontSize: '13px' }}>
                 허위 매물을 등록할 경우 MySpot에서 임의로 계정 및 매물 전체 삭제
                 처리됩니다.
               </div>
-            </Center_Div2>
+            </Center2_Div>
           </Upload_Div_B>
           <Center_Div
             className="space-x-5"
@@ -1047,14 +1077,14 @@ export default function Upload() {
         </>
       ) : (
         <>
-          <Center_Div2 className="mb-5">
+          <Center_Div style={{ width: '100%' }}>
             <Upload_Btn_Bright onClick={() => setIsUploadPage(true)}>
               방 내놓기
             </Upload_Btn_Bright>
             <Upload_Btn_Dark onClick={() => setIsUploadPage(false)}>
               내 방 관리
             </Upload_Btn_Dark>
-          </Center_Div2>
+          </Center_Div>
           <UploadCaveats manage={true} />
           {roomsLoading ? (
             <Center_Div className="m-72">
@@ -1191,19 +1221,24 @@ export default function Upload() {
           )}
         </>
       )}
-    </div>
+    </Container>
   ) : (
-    <Center_Div className="m-40">로그인 해주시기 바랍니다.</Center_Div>
+    <Center_Div style={{ margin: '30vh 0' }}>
+      로그인 해주시기 바랍니다.
+    </Center_Div>
   )
 }
 
-const fontsize: number = 14
-//button
+const Container = styled(Center_Div)`
+  flex-flow: column;
+  width: 100%;
+  padding: 1rem;
+`
+
 const Upload_Btn = styled.button`
-  min-width: 500px;
-  width: 500px;
+  width: 50%;
   height: 60px;
-  font-size: ${fontsize}px;
+  font-size: 14px;
   border: 0.5px solid ${subColor_lighter};
 `
 const Upload_Btn_Medium = styled.button`
@@ -1213,18 +1248,16 @@ const Upload_Btn_Medium = styled.button`
 `
 const Upload_Btn_Dark = styled(Upload_Btn)`
   color: ${subColor_lighter};
-  background-color: ${mainColor};
+  background-color: black;
 `
 const Upload_Btn_Bright = styled(Upload_Btn)`
-  color: ${mainColor};
-  background-color: ${subColor_lighter};
+  background-color: ${subColor_light};
 `
 export const Upload_Btn_Submit = styled(Upload_Btn_Medium)`
   color: ${subColor_lighter};
-  background-color: ${mainColor};
+  background-color: black;
 `
 export const Upload_Btn_Outline = styled(Upload_Btn_Medium)`
-  color: ${mainColor};
   border: 0.5px solid ${subColor_medium};
 `
 const Upload_Btn_Outline1 = styled(Upload_Btn_Outline)`
@@ -1244,25 +1277,25 @@ const Manage_Btn_Dark = styled(Manage_Btn)`
   color: ${subColor_lighter};
 `
 const Manage_Btn_Main = styled(Manage_Btn)`
-  background-color: ${mainColor};
+  background-color: black;
   color: ${subColor_light};
 `
 
 //input
 const Upload_Input = styled.input`
   :hover {
-    border: 0.5px solid ${mainColor};
+    border: 0.5px solid black;
   }
   :active {
     outline: none !important;
-    border: 1px solid ${mainColor};
+    border: 1px solid black;
   }
   :focus {
     outline: none !important;
-    border: 1px solid ${mainColor};
+    border: 1px solid black;
   }
   border: 0.5px solid ${subColor_medium};
-  font-size: ${fontsize - 1}px;
+  font-size: 13px;
   padding: 10px;
   margin: 10px;
 `
@@ -1289,17 +1322,17 @@ const Upload_Input4 = styled(Upload_Input)`
 //textarea
 const Upload_Textarea = styled.textarea`
   border: 0.5px solid ${subColor_medium};
-  font-size: ${fontsize - 1}px;
+  font-size: 13px;
   :hover {
-    border: 0.5px solid ${mainColor};
+    border: 0.5px solid black;
   }
   :active {
     outline: none !important;
-    border: 1px solid ${mainColor};
+    border: 1px solid black;
   }
   :focus {
     outline: none !important;
-    border: 1px solid ${mainColor};
+    border: 1px solid black;
   }
   resize: none;
 `
@@ -1316,22 +1349,13 @@ const Upload_Textarea2 = styled(Upload_Textarea)`
   margin: 5px;
 `
 //div
-const Center_Div = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`
-const Center_Div2 = styled.div`
-  display: flex;
-  align-items: center;
-`
 const Upload_Div_B = styled.div`
+  width: 100%;
   border: 0.5px solid ${subColor_medium};
   margin-top: 30px;
-  min-width: 1000px;
 `
 const Upload_Div_Absolute = styled.div`
-  font-size: ${fontsize - 3}px;
+  font-size: 11px;
   position: absolute;
   right: 10px;
   top: 20px;
@@ -1345,23 +1369,27 @@ const Upload_Div_Title = styled(Center_Div)`
   border-bottom: 0.5px solid ${subColor_medium};
 `
 const Upload_Div_Sub_Title = styled(Center_Div)`
-  width: 150px;
-  font-size: ${fontsize}px;
-  background-color: ${subColor_lighter};
+  font-size: 14px;
+  background-color: ${subColor_light};
 `
 const Upload_Div_Bt = styled.div`
   width: 100%;
-  display: flex;
-  font-size: ${fontsize}px;
+  display: grid;
+  grid-template-columns: 1fr 4fr;
+  @media (max-width: 767px) {
+    grid-template-columns: 1fr 2fr;
+    .seg{
+      display: none;
+    }
+  }
+  font-size: 14px;
   border-top: 1px solid ${subColor_light};
 `
-const Upload_Div_Sub = styled(Center_Div2)`
-  width: 850px;
-`
-const Upload_Div_Sub1 = styled(Center_Div2)`
+const Upload_Div_Sub = styled(Center2_Div)``
+const Upload_Div_Sub1 = styled(Center2_Div)`
   width: 350px;
 `
-const Upload_Div_Sub3 = styled(Center_Div2)`
+const Upload_Div_Sub3 = styled(Center2_Div)`
   padding-left: 20px;
   width: 100%;
 `
@@ -1425,7 +1453,7 @@ const Img_Hover_Div = styled(HoverDiv)`
   width: 18px;
   height: 18px;
   display: flex;
-  background-color: ${mainColor};
+  background-color: black;
   align-items: center;
   justify-content: center;
   position: absolute;
