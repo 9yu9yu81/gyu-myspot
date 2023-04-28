@@ -3,14 +3,17 @@ import Image from 'next/image'
 import { GetServerSidePropsContext } from 'next'
 import { useRouter } from 'next/router'
 import styled from '@emotion/styled'
-import { Chip, FileButton, Modal } from '@mantine/core'
-import { IconExclamationCircle, IconMapPin } from '@tabler/icons'
+import { Chip, FileButton, Menu, Modal } from '@mantine/core'
 import {
-  HoverDiv,
-  mainColor,
-  subColor_Dark,
-  subColor_light,
-  subColor_lighter,
+  IconArrowDown,
+  IconExclamationCircle,
+  IconMapPin,
+  IconX,
+} from '@tabler/icons'
+import {
+  Center2_Div,
+  CenterCol,
+  Center_Div,
   subColor_medium,
 } from 'components/styledComponent'
 import { useMutation, useQuery } from '@tanstack/react-query'
@@ -34,13 +37,26 @@ const CustomSegmentedControl = dynamic(
 )
 const CustomCheckBox = dynamic(import('components/CustomCheckBox'))
 import { Calendar } from '@mantine/dates'
-import { SubBtn } from 'pages/upload'
-
-const DESCRIPTION_PLACEHOLDER = `[상세설명 작성 주의사항]
-- 매물 정보와 관련없는 홍보성 정보는 입력할 수 없습니다.
-- 매물등록 규정에 위반되는 금칙어는 입력할 수 없습니다.
-
-위 주의사항 위반시 임의로 매물 삭제 혹은 서비스 이용이 제한될 수 있습니다.`
+import {
+  AbsoluteText,
+  AddressInput,
+  DESCRIPTION_PLACEHOLDER,
+  HalfContainer,
+  Img_Hover_Div,
+  MenuBtn,
+  SubBtn,
+  SubTitle,
+  Title,
+  UploadContainer,
+  UploadSubContainer,
+  Upload_Input,
+  Upload_Input2,
+  Upload_Input3,
+  Upload_Input4,
+  Upload_Textarea1,
+  Upload_Textarea2,
+} from 'pages/upload'
+import { menuStyle } from 'pages/mainMap'
 
 const DETAILADDR_PLACEHOLDER = `상세 주소
 예) e편한세상 101동 1101호`
@@ -401,29 +417,16 @@ export default function RoomEdit(room: RoomAllData) {
   )
 
   return session && status === 'authenticated' ? (
-    <div>
-      <div
-        style={{
-          width: '1000px',
-          height: '100px',
-          backgroundColor: `${mainColor}`,
-          color: `${subColor_light}`,
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          fontSize: '20px',
-          margin: '120px 0 40px 0',
-          fontWeight: '600',
-        }}
-      >
-        수정하기
+    <Container>
+      <MainTitle>수정하기</MainTitle>
+      <div className="m-1">
+        <UploadCaveats />
       </div>
-      <UploadCaveats />
-      <Upload_Div_B>
-        <Upload_Div_Title>매물 정보</Upload_Div_Title>
-        <Upload_Div_Bt>
-          <Upload_Div_Sub_Title>매물 종류</Upload_Div_Sub_Title>
-          <Upload_Div_Sub>
+      <UploadContainer id="room">
+        <Title>매물 정보</Title>
+        <UploadSubContainer className="border-b">
+          <SubTitle>매물 종류</SubTitle>
+          <Center2_Div className="seg">
             <CustomSegmentedControl
               value={String(category)}
               onChange={setCategory}
@@ -432,11 +435,33 @@ export default function RoomEdit(room: RoomAllData) {
                 value: String(idx + 1),
               }))}
             />
-          </Upload_Div_Sub>
-        </Upload_Div_Bt>
-        <Upload_Div_Bt>
-          <Upload_Div_Sub_Title>건물 유형</Upload_Div_Sub_Title>
-          <Upload_Div_Sub>
+          </Center2_Div>
+          <Center_Div className="menubtn " style={{ padding: '0.5rem' }}>
+            <Menu width={180}>
+              <Menu.Target>
+                <MenuBtn style={{ width: '8rem' }}>
+                  {CATEGORY_MAP[Number(category) - 1]}
+                  <IconArrowDown size={15} />
+                </MenuBtn>
+              </Menu.Target>
+              <Menu.Dropdown>
+                {CATEGORY_MAP.map((cat, idx) => (
+                  <Menu.Item
+                    key={`${cat}-${idx}`}
+                    value={idx}
+                    onClick={() => setCategory(String(idx + 1))}
+                    style={menuStyle(category, idx + 1)}
+                  >
+                    <Center_Div>{cat}</Center_Div>
+                  </Menu.Item>
+                ))}
+              </Menu.Dropdown>
+            </Menu>
+          </Center_Div>
+        </UploadSubContainer>
+        <UploadSubContainer>
+          <SubTitle>건물 유형</SubTitle>
+          <Center2_Div className="seg">
             <CustomSegmentedControl
               value={String(roomType)}
               onChange={setRoomType}
@@ -445,49 +470,71 @@ export default function RoomEdit(room: RoomAllData) {
                 value: String(idx + 1),
               }))}
             />
-          </Upload_Div_Sub>
-        </Upload_Div_Bt>
-      </Upload_Div_B>
-      <Upload_Div_B className="relative">
-        <Upload_Div_Absolute className="right-3">
-          *등기부등본 상의 주소를 입력해 주세요.
-        </Upload_Div_Absolute>
-        <Upload_Div_Title>위치 정보</Upload_Div_Title>
-        <Upload_Div_Bt>
-          <Upload_Div_Sub_Title>주소</Upload_Div_Sub_Title>
-          <Upload_Div_Sub style={{ padding: '35px' }}>
-            <div>
-              <Center_Div2 className="font-light">
-                <IconExclamationCircle
-                  className="mr-1"
-                  size={18}
-                  stroke={1.5}
+          </Center2_Div>
+          <Center_Div className="menubtn" style={{ padding: '0.5rem' }}>
+            <Menu width={160}>
+              <Menu.Target>
+                <MenuBtn style={{ width: '8rem' }}>
+                  {TYPE_MAP[Number(roomType) - 1]}
+                  <IconArrowDown size={15} />
+                </MenuBtn>
+              </Menu.Target>
+              <Menu.Dropdown>
+                {TYPE_MAP.map((item, idx) => (
+                  <Menu.Item
+                    key={`${item}-${idx}`}
+                    value={idx}
+                    onClick={() => setRoomType(String(idx + 1))}
+                    style={menuStyle(roomType, idx + 1)}
+                  >
+                    <Center_Div>{item}</Center_Div>
+                  </Menu.Item>
+                ))}
+              </Menu.Dropdown>
+            </Menu>
+          </Center_Div>
+        </UploadSubContainer>
+      </UploadContainer>
+      <UploadContainer id="address">
+        <AbsoluteText>*등기부등본 상의 주소를 입력해 주세요.</AbsoluteText>
+        <Title>위치 정보</Title>
+        <UploadSubContainer className="address">
+          <SubTitle id="address">주소</SubTitle>
+          <div className="sub-address">
+            <CenterCol className="mb-3">
+              <div>
+                <Center2_Div className="font-light">
+                  <IconExclamationCircle
+                    className="mr-1"
+                    size={18}
+                    stroke={1.5}
+                  />
+                  도로명, 건물명, 지번에 대해 통합검색이 가능합니다.
+                </Center2_Div>
+                <Center2_Div>
+                  <AddressInput
+                    type="text"
+                    placeholder="예) 번동 10-1, 강북구 번동"
+                    onKeyUp={handleEnterKeypress}
+                    value={addr}
+                    onChange={(e) => setAddr(e.target.value)}
+                  />
+                  <SubBtn
+                    className="dark"
+                    onClick={loadLayout}
+                    ref={postcodeButtonRef}
+                  >
+                    주소 검색
+                  </SubBtn>
+                </Center2_Div>
+                <Upload_Textarea1
+                  placeholder={DETAILADDR_PLACEHOLDER}
+                  value={detailAddr}
+                  onChange={(e) => setDetailAddr(e.target.value)}
                 />
-                도로명, 건물명, 지번에 대해 통합검색이 가능합니다.
-              </Center_Div2>
-              <Center_Div2>
-                <Upload_Input1
-                  type="text"
-                  placeholder="예) 번동 10-1, 강북구 번동"
-                  onKeyUp={handleEnterKeypress}
-                  value={addr}
-                  onChange={(e) => setAddr(e.target.value)}
-                />
-                <SubBtn
-                  className="dark"
-                  onClick={loadLayout}
-                  ref={postcodeButtonRef}
-                >
-                  주소 검색
-                </SubBtn>
-              </Center_Div2>
-              <Upload_Textarea1
-                placeholder={DETAILADDR_PLACEHOLDER}
-                value={detailAddr}
-                onChange={(e) => setDetailAddr(e.target.value)}
-              />
-            </div>
-            <div className="ml-auto">
+              </div>
+            </CenterCol>
+            <Center_Div>
               {addr !== '' ? (
                 <Map width="300px" height="280px" address={addr} />
               ) : (
@@ -504,158 +551,196 @@ export default function RoomEdit(room: RoomAllData) {
                   <div>해당 위치가 지도에 표시됩니다.</div>
                 </Center_Div>
               )}
-            </div>
-          </Upload_Div_Sub>
-        </Upload_Div_Bt>
-      </Upload_Div_B>
-      <Upload_Div_B>
-        <Upload_Div_Title>거래 정보</Upload_Div_Title>
-        <Upload_Div_Bt>
-          <Upload_Div_Sub_Title>거래 종류</Upload_Div_Sub_Title>
-          <Upload_Div_Sub1>
-            <CustomSegmentedControl
-              value={ym}
-              onChange={setYm}
-              data={YEAR_MONTH_MAP.map((label, idx) => ({
-                label: label,
-                value: String(idx + 1),
-              }))}
-            />
-          </Upload_Div_Sub1>
-          <Upload_Div_Sub_Title>가격</Upload_Div_Sub_Title>
-          <Upload_Div_Sub1>
-            {ym === '1' ? (
-              <Upload_Div_Sub3>
-                <Upload_Input2
-                  placeholder="전세"
-                  value={deposit}
-                  onChange={(e) => setDeposit(e.target.value)}
-                  onInput={(e) => getOnlyNumber(e)}
-                />{' '}
-                만원
-              </Upload_Div_Sub3>
-            ) : (
-              <>
-                <Upload_Div_Sub3>
+            </Center_Div>
+          </div>
+        </UploadSubContainer>
+      </UploadContainer>
+      <UploadContainer>
+        <Title>거래 정보</Title>
+        <UploadSubContainer className="half">
+          <HalfContainer className="border-b">
+            <SubTitle>거래 종류</SubTitle>
+            <Center2_Div>
+              <CustomSegmentedControl
+                value={ym}
+                onChange={setYm}
+                data={YEAR_MONTH_MAP.map((label, idx) => ({
+                  label: label,
+                  value: String(idx + 1),
+                }))}
+              />
+            </Center2_Div>
+          </HalfContainer>
+          <HalfContainer>
+            <SubTitle>가격</SubTitle>
+            <Center2_Div className="pl-2">
+              {ym === '1' ? (
+                <Center2_Div>
                   <Upload_Input2
-                    placeholder="보증금"
+                    placeholder="전세"
                     value={deposit}
                     onChange={(e) => setDeposit(e.target.value)}
                     onInput={(e) => getOnlyNumber(e)}
                   />{' '}
-                  /
-                  <Upload_Input2
-                    placeholder="월세"
-                    onChange={(e) => setFee(e.target.value)}
-                    onInput={(e) => getOnlyNumber(e)}
-                    value={fee}
-                  />{' '}
                   만원
-                </Upload_Div_Sub3>
-              </>
+                </Center2_Div>
+              ) : (
+                <>
+                  <Center2_Div>
+                    <Upload_Input2
+                      placeholder="보증금"
+                      value={deposit}
+                      onChange={(e) => setDeposit(e.target.value)}
+                      onInput={(e) => getOnlyNumber(e)}
+                    />{' '}
+                    /
+                    <Upload_Input2
+                      placeholder="월세"
+                      onChange={(e) => setFee(e.target.value)}
+                      onInput={(e) => getOnlyNumber(e)}
+                      value={fee}
+                    />{' '}
+                    만원
+                  </Center2_Div>
+                </>
+              )}
+            </Center2_Div>
+          </HalfContainer>
+        </UploadSubContainer>
+      </UploadContainer>
+      <UploadContainer>
+        <Title>기본 정보</Title>
+        <UploadSubContainer className="half">
+          <HalfContainer className="border-b">
+            <SubTitle className="flex-col">
+              <div>건물 크기</div>
+              <div>(1평=3.3058㎡)</div>
+            </SubTitle>
+            <Center2_Div className="flex-col">
+              <Center2_Div className="w-full pl-4">
+                공급 면적
+                <Upload_Input2
+                  type="number"
+                  value={supArea}
+                  onChange={(e) => setSupArea(e.target.value)}
+                  onInput={(e) => getOnlyNumber(e)}
+                />{' '}
+                평
+              </Center2_Div>
+              <Center2_Div className=" w-full pl-4">
+                전용 면적
+                <Upload_Input2
+                  type="number"
+                  value={area}
+                  onChange={(e) => setArea(e.target.value)}
+                  onInput={(e) => getOnlyNumber(e)}
+                />{' '}
+                평
+              </Center2_Div>
+            </Center2_Div>
+          </HalfContainer>
+          <HalfContainer className="border-b">
+            <SubTitle className="flex-col">
+              <div>건물 층수</div>
+            </SubTitle>
+            <Center2_Div className="flex-col">
+              <Center2_Div className="w-full pl-4">
+                건물 층수
+                <Upload_Input2
+                  type="number"
+                  value={tFloor}
+                  onChange={(e) => setTFloor(e.target.value)}
+                  onInput={(e) => getOnlyNumber(e)}
+                />{' '}
+                층
+              </Center2_Div>
+              <Center2_Div className="w-full pl-4">
+                해당 층수
+                <Upload_Input2
+                  type="number"
+                  value={floor}
+                  onChange={(e) => setFloor(e.target.value)}
+                  onInput={(e) => getOnlyNumber(e)}
+                />{' '}
+                층
+              </Center2_Div>
+            </Center2_Div>
+          </HalfContainer>
+        </UploadSubContainer>
+        <UploadSubContainer className="border-b">
+          <SubTitle>난방 종류</SubTitle>
+          <div className="seg ">
+            <CustomSegmentedControl
+              value={heat}
+              onChange={setHeat}
+              data={HEAT_MAP.map((label, idx) => ({
+                label: label,
+                value: String(idx + 1),
+              }))}
+            />
+          </div>
+          <Center_Div className="menubtn  w-full">
+            <Menu width={160}>
+              <Menu.Target>
+                <MenuBtn style={{ margin: '0.5rem', width: '8rem' }}>
+                  {HEAT_MAP[Number(heat) - 1]}
+                  <IconArrowDown size={15} />
+                </MenuBtn>
+              </Menu.Target>
+              <Menu.Dropdown>
+                {HEAT_MAP.map((item, idx) => (
+                  <Menu.Item
+                    key={`${item}-${idx}`}
+                    value={idx}
+                    onClick={() => setHeat(String(idx + 1))}
+                    style={menuStyle(heat, idx + 1)}
+                  >
+                    <Center_Div>{item}</Center_Div>
+                  </Menu.Item>
+                ))}
+              </Menu.Dropdown>
+            </Menu>
+          </Center_Div>
+        </UploadSubContainer>
+        <Modal
+          withCloseButton={false}
+          opened={modal}
+          onClose={() => setModal(false)}
+          centered
+          size={'auto'}
+          overlayOpacity={0.1}
+        >
+          <Center_Div className="flex-col">
+            <Calendar value={moveIn} onChange={setMoveIn} />
+            <SubBtn
+              className="outLine"
+              style={{ marginTop: '10px' }}
+              onClick={() => setModal(false)}
+            >
+              선택 완료
+            </SubBtn>
+          </Center_Div>
+        </Modal>
+        <UploadSubContainer className="border-b">
+          <SubTitle>입주 가능일</SubTitle>
+          <Center2_Div className="pl-4 p-1">
+            <SubBtn className="outLine" onClick={() => setModal(true)}>
+              날짜 선택
+            </SubBtn>
+            {moveIn && (
+              <Center2_Div className="moveIn" style={{ marginLeft: '10px' }}>
+                {format(new Date(moveIn), 'yyyy년 MM월 dd일')}
+              </Center2_Div>
             )}
-          </Upload_Div_Sub1>
-        </Upload_Div_Bt>
-      </Upload_Div_B>
-      <Upload_Div_B>
-        <Upload_Div_Title>기본 정보</Upload_Div_Title>
-        <Upload_Div_Bt>
-          <Upload_Div_Sub_Title className="flex-col">
-            <div>건물 크기</div>
-            <div>(1평=3.3058㎡)</div>
-          </Upload_Div_Sub_Title>
-          <Upload_Div_Sub1 className="flex-col">
-            <Upload_Div_Sub3 className="border-b">
-              공급 면적
-              <Upload_Input2
-                type="number"
-                value={supArea}
-                onChange={(e) => setSupArea(e.target.value)}
-                onInput={(e) => getOnlyNumber(e)}
-              />{' '}
-              평
-            </Upload_Div_Sub3>
-            <Upload_Div_Sub3>
-              전용 면적
-              <Upload_Input2
-                type="number"
-                value={area}
-                onChange={(e) => setArea(e.target.value)}
-                onInput={(e) => getOnlyNumber(e)}
-              />{' '}
-              평
-            </Upload_Div_Sub3>
-          </Upload_Div_Sub1>
-          <Upload_Div_Sub_Title className="flex-col">
-            <div>건물 층수</div>
-          </Upload_Div_Sub_Title>
-          <Upload_Div_Sub1 className="flex-col">
-            <Upload_Div_Sub3 className="border-b">
-              건물 층수
-              <Upload_Input2
-                type="number"
-                value={tFloor}
-                onChange={(e) => setTFloor(e.target.value)}
-                onInput={(e) => getOnlyNumber(e)}
-              />{' '}
-              층
-            </Upload_Div_Sub3>
-            <Upload_Div_Sub3>
-              해당 층수
-              <Upload_Input2
-                type="number"
-                value={floor}
-                onChange={(e) => setFloor(e.target.value)}
-                onInput={(e) => getOnlyNumber(e)}
-              />{' '}
-              층
-            </Upload_Div_Sub3>
-          </Upload_Div_Sub1>
-        </Upload_Div_Bt>
-        <Upload_Div_Bt>
-          <Upload_Div_Sub_Title>난방 종류</Upload_Div_Sub_Title>
-          <CustomSegmentedControl
-            value={heat}
-            onChange={setHeat}
-            data={HEAT_MAP.map((label, idx) => ({
-              label: label,
-              value: String(idx + 1),
-            }))}
-          />
-        </Upload_Div_Bt>
-        <Upload_Div_Bt>
-          <Upload_Div_Sub_Title>입주 가능일</Upload_Div_Sub_Title>
-          <Modal
-            withCloseButton={false}
-            opened={modal}
-            onClose={() => setModal(false)}
-            centered
-            size={'auto'}
-            overlayOpacity={0.1}
-          >
-            <Center_Div className="flex-col">
-              <Calendar value={moveIn} onChange={setMoveIn} />
-              <Upload_Btn_Outline onClick={() => setModal(false)}>
-                선택 완료
-              </Upload_Btn_Outline>
-            </Center_Div>
-          </Modal>
-          <Upload_Btn_Outline1 onClick={() => setModal(true)}>
-            날짜 선택
-          </Upload_Btn_Outline1>
-          {moveIn && (
-            <Center_Div2 style={{ marginLeft: '10px' }}>
-              {format(new Date(moveIn), 'yyyy년 MM월 dd일')}
-            </Center_Div2>
-          )}
-        </Upload_Div_Bt>
-      </Upload_Div_B>
-      <Upload_Div_B>
-        <Upload_Div_Title>추가 정보</Upload_Div_Title>
-        <Upload_Div_Bt>
-          <Upload_Div_Sub_Title>관리비</Upload_Div_Sub_Title>
-          <Upload_Div_Sub className="flex-col">
-            <Upload_Div_Sub3 className="border-b space-x-5">
+          </Center2_Div>
+        </UploadSubContainer>
+      </UploadContainer>
+      <UploadContainer>
+        <Title>추가 정보</Title>
+        <UploadSubContainer className="border-b">
+          <SubTitle>관리비</SubTitle>
+          <Center2_Div className="flex-col">
+            <Center2_Div className="space-x-5 w-full">
               <Upload_Input2
                 type="number"
                 disabled={mChecked}
@@ -670,17 +755,14 @@ export default function RoomEdit(room: RoomAllData) {
                 checked={mChecked}
                 onChange={(e) => setMChecked(e.target.checked)}
               />
-            </Upload_Div_Sub3>
-            <Upload_Div_Sub3>
-              <Center_Div
-                className="flex-col"
-                style={{ minWidth: '80px', margin: '10px 20px 10px 0' }}
-              >
-                <div>관리비 항목</div>
-                <div>(다중선택가능)</div>
-              </Center_Div>
+            </Center2_Div>
+          </Center2_Div>
+        </UploadSubContainer>
+        <UploadSubContainer className="border-b">
+          <SubTitle>관리비 항목</SubTitle>
+          <Center2_Div className="flex-col">
+            <div className="w-full p-2">
               <Chip.Group
-                position="center"
                 multiple
                 value={mOption}
                 onChange={setMOption}
@@ -697,54 +779,59 @@ export default function RoomEdit(room: RoomAllData) {
                   </Chip>
                 ))}
               </Chip.Group>
-            </Upload_Div_Sub3>
-          </Upload_Div_Sub>
-        </Upload_Div_Bt>
-        <Upload_Div_Bt>
-          <Upload_Div_Sub_Title>
-            <div>엘리베이터</div>
-          </Upload_Div_Sub_Title>
-          <Upload_Div_Sub1>
-            <CustomSegmentedControl
-              value={elevator}
-              onChange={setElevator}
-              data={[
-                { value: '0', label: '불가능' },
-                { value: '1', label: '가능' },
-              ]}
-            />
-          </Upload_Div_Sub1>
-          <Upload_Div_Sub_Title>
-            <div>주차여부</div>
-          </Upload_Div_Sub_Title>
-          <Upload_Div_Sub1>
-            <CustomSegmentedControl
-              value={parking}
-              onChange={setParking}
-              data={[
-                { value: '0', label: '불가능' },
-                { value: '1', label: '가능' },
-              ]}
-            />
-            {parking === '1' && (
-              <>
-                <Upload_Input4
-                  type="number"
-                  onChange={(e) => setPFee(e.target.value)}
-                  onBlur={(e) => e.target.value === '' && setPFee('0')}
-                  value={pFee}
-                  onInput={(e) => getOnlyNumber(e)}
-                />{' '}
-                만원
-              </>
-            )}
-          </Upload_Div_Sub1>
-        </Upload_Div_Bt>
-        <Upload_Div_Bt>
-          <Upload_Div_Sub_Title>
+            </div>
+          </Center2_Div>
+        </UploadSubContainer>
+
+        <UploadSubContainer className="parking">
+          <HalfContainer className="parking border-b">
+            <SubTitle>
+              <div>엘리베이터</div>
+            </SubTitle>
+            <Center2_Div>
+              <CustomSegmentedControl
+                value={elevator}
+                onChange={setElevator}
+                data={[
+                  { value: '0', label: '불가능' },
+                  { value: '1', label: '가능' },
+                ]}
+              />
+            </Center2_Div>
+          </HalfContainer>
+          <HalfContainer className="parking border-b">
+            <SubTitle>
+              <div>주차여부</div>
+            </SubTitle>
+            <Center2_Div>
+              <CustomSegmentedControl
+                value={parking}
+                onChange={setParking}
+                data={[
+                  { value: '0', label: '불가능' },
+                  { value: '1', label: '가능' },
+                ]}
+              />
+              {parking === '1' && (
+                <>
+                  <Upload_Input4
+                    type="number"
+                    onChange={(e) => setPFee(e.target.value)}
+                    onBlur={(e) => e.target.value === '' && setPFee('0')}
+                    value={pFee}
+                    onInput={(e) => getOnlyNumber(e)}
+                  />{' '}
+                  만원
+                </>
+              )}
+            </Center2_Div>
+          </HalfContainer>
+        </UploadSubContainer>
+        <UploadSubContainer className="border-b">
+          <SubTitle>
             <div>구조</div>
-          </Upload_Div_Sub_Title>
-          <Upload_Div_Sub>
+          </SubTitle>
+          <Center2_Div>
             <Chip.Group
               style={{ padding: '10px 20px 10px 20px' }}
               multiple
@@ -763,13 +850,13 @@ export default function RoomEdit(room: RoomAllData) {
                 </Chip>
               ))}
             </Chip.Group>
-          </Upload_Div_Sub>
-        </Upload_Div_Bt>
-        <Upload_Div_Bt>
-          <Upload_Div_Sub_Title>
+          </Center2_Div>
+        </UploadSubContainer>
+        <UploadSubContainer>
+          <SubTitle>
             <div>옵션항목</div>
-          </Upload_Div_Sub_Title>
-          <Upload_Div_Sub>
+          </SubTitle>
+          <Center2_Div>
             <Chip.Group
               style={{ padding: '10px 20px 10px 20px' }}
               multiple
@@ -788,34 +875,34 @@ export default function RoomEdit(room: RoomAllData) {
                 </Chip>
               ))}
             </Chip.Group>
-          </Upload_Div_Sub>
-        </Upload_Div_Bt>
-      </Upload_Div_B>
-      <Upload_Div_B>
-        <Upload_Div_Title>상세 정보</Upload_Div_Title>
-        <Upload_Div_Bt>
-          <Upload_Div_Sub_Title>제목</Upload_Div_Sub_Title>
+          </Center2_Div>
+        </UploadSubContainer>
+      </UploadContainer>
+      <UploadContainer>
+        <Title>상세 정보</Title>
+        <UploadSubContainer className="border-b">
+          <SubTitle>제목</SubTitle>
           <Upload_Input3
             placeholder="예) 신논현역 도보 5분거리, 혼자 살기 좋은 방 입니다."
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
-        </Upload_Div_Bt>
-        <Upload_Div_Bt>
-          <Upload_Div_Sub_Title>상세 설명</Upload_Div_Sub_Title>
+        </UploadSubContainer>
+        <UploadSubContainer>
+          <SubTitle>상세 설명</SubTitle>
           <Upload_Textarea2
             wrap="hard"
             placeholder={DESCRIPTION_PLACEHOLDER}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
-        </Upload_Div_Bt>
-      </Upload_Div_B>
-      <Upload_Div_B>
-        <Upload_Div_Title>연락처 정보</Upload_Div_Title>
-        <Upload_Div_Bt>
-          <Upload_Div_Sub_Title>연락 가능한 번호</Upload_Div_Sub_Title>
-          <Upload_Div_Sub style={{ padding: '0 20px 0 20px' }}>
+        </UploadSubContainer>
+      </UploadContainer>
+      <UploadContainer>
+        <Title>연락처 정보</Title>
+        <UploadSubContainer>
+          <SubTitle>연락 가능한 번호</SubTitle>
+          <Center2_Div style={{ padding: '0 20px 0 20px' }}>
             <CustomCheckBox
               label="기존 번호 사용"
               checked={cChecked}
@@ -827,7 +914,6 @@ export default function RoomEdit(room: RoomAllData) {
                   : setCChecked(e.target.checked)
               }
             />
-            {}
             <Upload_Input
               type="number"
               disabled={cChecked}
@@ -835,18 +921,21 @@ export default function RoomEdit(room: RoomAllData) {
               onChange={(e) => setContact(e.target.value)}
               onInput={(e) => getOnlyNumber(e)}
               style={{
-                width: '180px',
+                width: '140px',
                 marginLeft: '20px',
               }}
+              placeholder=" '-' 를 생략하고 입력"
             />
-          </Upload_Div_Sub>
-        </Upload_Div_Bt>
-      </Upload_Div_B>
-      <Upload_Div_B>
-        <Upload_Div_Title>사진 등록</Upload_Div_Title>
-        <UploadCaveats picture={true} />
+          </Center2_Div>
+        </UploadSubContainer>
+      </UploadContainer>
+      <UploadContainer>
+        <Title>사진 등록</Title>
+        <div className="m-4">
+          <UploadCaveats picture={true} />
+        </div>
         <div>
-          <div style={{ minWidth: '1000px', padding: '20px' }}>
+          <div style={{ padding: '20px' }}>
             <FileButton accept="image/*" multiple onChange={setFiles}>
               {(props) => (
                 <SubBtn className="dark" {...props}>
@@ -854,7 +943,7 @@ export default function RoomEdit(room: RoomAllData) {
                 </SubBtn>
               )}
             </FileButton>
-            <div className="items-center mt-5 flex flex-wrap bg-zinc-100 pt-5 pb-5">
+            <Center_Div className="mt-5 flex-wrap bg-zinc-100 pt-5 pb-5">
               {images &&
                 images.length > 0 &&
                 images.map((image, idx) => (
@@ -869,28 +958,25 @@ export default function RoomEdit(room: RoomAllData) {
                   >
                     <Image alt={'img'} key={idx} src={image} fill />
                     <Img_Hover_Div onClick={() => handleImgDel(image)}>
-                      X
+                      <IconX size={15} color={'white'} />
                     </Img_Hover_Div>
                   </div>
                 ))}
-            </div>
+            </Center_Div>
           </div>
         </div>
-        <Center_Div2 className="m-3">
+        <Center2_Div className="m-3">
           <IconExclamationCircle size={18} className="mr-1" />
           <div style={{ fontSize: '13px' }}>
             허위 매물을 등록할 경우 MySpot에서 임의로 계정 및 매물 전체 삭제
             처리됩니다.
           </div>
-        </Center_Div2>
-      </Upload_Div_B>
-      <Center_Div
-        className="space-x-5"
-        style={{ minWidth: '1000px', margin: '30px 0 30px 0' }}
-      >
-        <Upload_Btn_Outline onClick={() => router.back()}>
+        </Center2_Div>
+      </UploadContainer>
+      <Center_Div className="space-x-5" style={{ margin: '30px 0 30px 0' }}>
+        <SubBtn className="outLine" onClick={() => router.back()}>
           취소
-        </Upload_Btn_Outline>
+        </SubBtn>
         <SubBtn
           className="dark"
           onClick={() => {
@@ -900,156 +986,29 @@ export default function RoomEdit(room: RoomAllData) {
           수정하기
         </SubBtn>
       </Center_Div>
-    </div>
+    </Container>
   ) : (
-    <Center_Div className="m-40">로그인 해주시기 바랍니다.</Center_Div>
+    <Center_Div style={{ margin: '30vh 0' }}>
+      로그인 해주시기 바랍니다.
+    </Center_Div>
   )
 }
 
-const fontsize: number = 14
-
-export const Upload_Btn_Outline = styled(SubBtn)`
-  color: ${mainColor};
-  border: 0.5px solid ${subColor_medium};
-`
-const Upload_Btn_Outline1 = styled(Upload_Btn_Outline)`
-  margin: 10px 10px 10px 20px;
-`
-//input
-const Upload_Input = styled.input`
-  :hover {
-    border: 0.5px solid ${mainColor};
-  }
-  :active {
-    outline: none !important;
-    border: 1px solid ${mainColor};
-  }
-  :focus {
-    outline: none !important;
-    border: 1px solid ${mainColor};
-  }
-  border: 0.5px solid ${subColor_medium};
-  font-size: ${fontsize - 1}px;
-  padding: 10px;
-  margin: 10px;
-`
-const Upload_Input1 = styled(Upload_Input)`
-  height: 40px;
-  width: 330px;
-  margin: 20px 10px 20px 0;
-`
-const Upload_Input2 = styled(Upload_Input)`
-  height: 40px;
-  width: 110px;
-`
-
-const Upload_Input3 = styled(Upload_Input)`
-  height: 40px;
-  min-width: 840px;
-  margin: 5px;
-`
-const Upload_Input4 = styled(Upload_Input)`
-  height: 40px;
-  width: 60px;
-`
-
-//textarea
-const Upload_Textarea = styled.textarea`
-  border: 0.5px solid ${subColor_medium};
-  font-size: ${fontsize - 1}px;
-  :hover {
-    border: 0.5px solid ${mainColor};
-  }
-  :active {
-    outline: none !important;
-    border: 1px solid ${mainColor};
-  }
-  :focus {
-    outline: none !important;
-    border: 1px solid ${mainColor};
-  }
-  resize: none;
-`
-const Upload_Textarea1 = styled(Upload_Textarea)`
+const MainTitle = styled.div`
+  width: 100%;
   height: 100px;
-  width: 440px;
-  padding: 10px;
-  margin-right: 10px;
-`
-const Upload_Textarea2 = styled(Upload_Textarea)`
-  min-height: 500px;
-  min-width: 840px;
-  padding: 10px;
-  margin: 5px;
-`
-//div
-const Center_Div = styled.div`
+  background-color: black;
+  color: white;
   display: flex;
   justify-content: center;
   align-items: center;
-`
-const Center_Div2 = styled.div`
-  display: flex;
-  align-items: center;
-`
-const Upload_Div_B = styled.div`
-  border: 0.5px solid ${subColor_medium};
-  margin-top: 30px;
-  min-width: 1000px;
-`
-const Upload_Div_Absolute = styled.div`
-  font-size: ${fontsize - 3}px;
-  position: absolute;
-  right: 10px;
-  top: 20px;
-  color: ${subColor_medium};
-`
-const Upload_Div_Title = styled(Center_Div)`
-  font-size: 18px;
+  font-size: 1rem;
+  margin: 6rem 0 2rem 0;
   font-weight: 600;
-  padding: 15px;
+}}
+`
+const Container = styled.div`
+  flex-flow: column;
   width: 100%;
-  border-bottom: 0.5px solid ${subColor_medium};
-`
-const Upload_Div_Sub_Title = styled(Center_Div)`
-  width: 150px;
-  font-size: ${fontsize}px;
-  background-color: ${subColor_lighter};
-`
-const Upload_Div_Bt = styled.div`
-  width: 100%;
-  display: flex;
-  font-size: ${fontsize}px;
-  border-top: 1px solid ${subColor_light};
-`
-const Upload_Div_Sub = styled(Center_Div2)`
-  width: 850px;
-`
-const Upload_Div_Sub1 = styled(Center_Div2)`
-  width: 350px;
-`
-const Upload_Div_Sub3 = styled(Center_Div2)`
-  padding-left: 20px;
-  width: 100%;
-`
-const Img_Hover_Div = styled(HoverDiv)`
-  width: 18px;
-  height: 18px;
-  background-color: ${subColor_light};
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  position: absolute;
-  top: 5px;
-  right: 5px;
-`
-
-export const Manage_Div_Id = styled.div`
-  border: 1px solid ${subColor_Dark};
-  font-size: 12px;
-  padding: 0 3px 0 3px;
-  border-radius: 2px;
-  margin-bottom: 10px;
-  color: ${subColor_Dark};
+  padding: 1rem;
 `

@@ -227,8 +227,8 @@ export default function RoomIndex(room: RoomAllData) {
           defaultControlsConfig={carouselConfig}
         >
           {room.images.split(',').map((img, idx) => (
-            <StyledImageContianer>
-              <Image src={img} alt="carousel" key={idx} fill />
+            <StyledImageContianer key={idx}>
+              <Image src={img} alt="carousel" fill />
             </StyledImageContianer>
           ))}
         </Carousel>

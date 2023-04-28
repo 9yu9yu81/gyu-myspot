@@ -43,13 +43,13 @@ const CustomCheckBox = dynamic(import('components/CustomCheckBox'))
 const CustomPagination = dynamic(import('components/CustomPagination'))
 const HomeLogo = dynamic(import('components/home/HomeLogo'))
 
-const DESCRIPTION_PLACEHOLDER = `[상세설명 작성 주의사항]
+export const DESCRIPTION_PLACEHOLDER = `[상세설명 작성 주의사항]
 - 매물 정보와 관련없는 홍보성 정보는 입력할 수 없습니다.
 - 매물등록 규정에 위반되는 금칙어는 입력할 수 없습니다.
 
 위 주의사항 위반시 임의로 매물 삭제 혹은 서비스 이용이 제한될 수 있습니다.`
 
-const DETAILADDR_PLACEHOLDER = `상세 주소
+export const DETAILADDR_PLACEHOLDER = `상세 주소
 예) e편한세상 101동 1101호`
 
 interface RoomUploadData {
@@ -891,7 +891,7 @@ export default function Upload() {
             <UploadSubContainer className="border-b">
               <SubTitle>관리비</SubTitle>
               <Center2_Div className="flex-col">
-                <Center2_Div className=" space-x-5 w-full">
+                <Center2_Div className="space-x-5 w-full">
                   <Upload_Input2
                     type="number"
                     disabled={mChecked}
@@ -938,7 +938,7 @@ export default function Upload() {
                 <SubTitle>
                   <div>엘리베이터</div>
                 </SubTitle>
-                <Center2_Div className="">
+                <Center2_Div>
                   <CustomSegmentedControl
                     value={elevator}
                     onChange={setElevator}
@@ -981,7 +981,7 @@ export default function Upload() {
               <SubTitle>
                 <div>구조</div>
               </SubTitle>
-              <Center2_Div className="">
+              <Center2_Div>
                 <Chip.Group
                   style={{ padding: '10px 20px 10px 20px' }}
                   multiple
@@ -1189,9 +1189,9 @@ export default function Upload() {
                           </Manage_Div_75>
                         </Manage_Div_160>
                         <ManageBtnContainer>
-                            <Link href={`rooms/${room.id}/edit`}>
-                              <Manage_Btn>수정</Manage_Btn>
-                            </Link>
+                          <Link href={`rooms/${room.id}/edit`}>
+                            <Manage_Btn>수정</Manage_Btn>
+                          </Link>
                           <Manage_Btn
                             onClick={() =>
                               confirm('해당 매물을 정말 삭제하시겠습니까?') &&
@@ -1260,14 +1260,16 @@ export default function Upload() {
                     </Center_Div>
                     <Center_Div>
                       <ManageInfo>
-                        <Manage_Div_Bold className='mt-4'>
+                        <Manage_Div_Bold className="mt-4">
                           {CATEGORY_MAP[room.category_id - 1]}{' '}
                           {YEAR_MONTH_MAP[room.sType_id - 1]} {room.deposit}
                           {room.fee !== 0 && `/${room.fee}`}
                         </Manage_Div_Bold>
                         <div>{room.doro}</div>
-                        <div className='del'>{room.detail}</div>
-                        <div className='del' style={{ marginTop: '20px' }}>{room.title}</div>
+                        <div className="del">{room.detail}</div>
+                        <div className="del" style={{ marginTop: '20px' }}>
+                          {room.title}
+                        </div>
                       </ManageInfo>
                     </Center_Div>
                   </Center_Div>
@@ -1343,7 +1345,7 @@ const Manage_Btn_Main = styled(Manage_Btn)`
 `
 
 //input
-const Upload_Input = styled.input`
+export const Upload_Input = styled.input`
   :hover {
     border: 0.5px solid black;
   }
@@ -1360,7 +1362,7 @@ const Upload_Input = styled.input`
   padding: 10px;
   margin: 10px;
 `
-const AddressInput = styled(Upload_Input)`
+export const AddressInput = styled(Upload_Input)`
   height: 40px;
 
   margin: 20px 10px 20px 0;
@@ -1378,7 +1380,7 @@ const AddressInput = styled(Upload_Input)`
     width: 16rem;
   }
 `
-const Upload_Input2 = styled(Upload_Input)`
+export const Upload_Input2 = styled(Upload_Input)`
   height: 40px;
   width: 70px;
   @media (min-width: 576px) {
@@ -1392,11 +1394,11 @@ const Upload_Input2 = styled(Upload_Input)`
   }
 `
 
-const Upload_Input3 = styled(Upload_Input)`
+export const Upload_Input3 = styled(Upload_Input)`
   height: 40px;
   margin: 5px;
 `
-const Upload_Input4 = styled(Upload_Input)`
+export const Upload_Input4 = styled(Upload_Input)`
   height: 40px;
   width: 50px;
 `
@@ -1418,7 +1420,7 @@ const Upload_Textarea = styled.textarea`
   }
   resize: none;
 `
-const Upload_Textarea1 = styled(Upload_Textarea)`
+export const Upload_Textarea1 = styled(Upload_Textarea)`
   height: 100px;
   padding: 10px;
   width: 15.5rem;
@@ -1435,13 +1437,13 @@ const Upload_Textarea1 = styled(Upload_Textarea)`
     width: 21.5rem;
   }
 `
-const Upload_Textarea2 = styled(Upload_Textarea)`
+export const Upload_Textarea2 = styled(Upload_Textarea)`
   min-height: 500px;
   padding: 10px;
   margin: 5px;
 `
 //div
-const UploadContainer = styled.div`
+export const UploadContainer = styled.div`
   position: relative;
   width: 100%;
   border: 0.5px solid ${subColor_medium};
@@ -1458,7 +1460,7 @@ const UploadContainer = styled.div`
     }
   }
 `
-const AbsoluteText = styled.div`
+export const AbsoluteText = styled.div`
   font-size: 11px;
   position: absolute;
   color: ${subColor_medium};
@@ -1469,14 +1471,14 @@ const AbsoluteText = styled.div`
     top: 1rem;
   }
 `
-const Title = styled(Center_Div)`
+export const Title = styled(Center_Div)`
   font-size: 18px;
   font-weight: 600;
   padding: 15px;
   width: 100%;
   border-bottom: 0.5px solid ${subColor_medium};
 `
-const SubTitle = styled(Center_Div)`
+export const SubTitle = styled(Center_Div)`
   font-size: 14px;
   padding: 0.8rem 0;
   background-color: ${subColor_light};
@@ -1486,7 +1488,7 @@ const SubTitle = styled(Center_Div)`
     }
   }
 `
-const UploadSubContainer = styled.div`
+export const UploadSubContainer = styled.div`
   font-size: 14px;
   width: 100%;
   display: grid;
@@ -1525,7 +1527,7 @@ const UploadSubContainer = styled.div`
     font-size: 14px;
   }
 `
-const HalfContainer = styled.div`
+export const HalfContainer = styled.div`
   display: grid;
   grid-template-columns: 1fr;
   @media (min-width: 576px) {
@@ -1548,7 +1550,7 @@ const ManageContainer = styled(UploadContainer)`
   grid-template-columns: 1fr;
 
   @media (max-width: 575px) {
-    .del{
+    .del {
       display: none;
     }
   }
@@ -1567,7 +1569,6 @@ const ManageContainer = styled(UploadContainer)`
     }
     @media (min-width: 768px) {
       grid-template-columns: 1fr;
-
     }
     @media (min-width: 992px) {
       grid-template-columns: 1fr 1fr;
@@ -1634,7 +1635,7 @@ const ManageBtnContainer = styled.div`
   grid-template-columns: 1fr 1fr;
   margin-top: 1rem;
 `
-const Img_Hover_Div = styled(HoverDiv)`
+export const Img_Hover_Div = styled(HoverDiv)`
   width: 18px;
   height: 18px;
   display: flex;
@@ -1666,7 +1667,7 @@ const ManageId = styled(Center_Div)`
   }
 `
 
-const MenuBtn = styled(Center_Div)`
+export const MenuBtn = styled(Center_Div)`
   background-color: black;
   color: white;
   padding: 10px 15px 10px 20px;
