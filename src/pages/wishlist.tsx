@@ -1,7 +1,6 @@
 import { Loader, Menu, SegmentedControl } from '@mantine/core'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
-  Center2_Div,
   Center_Div,
   StyledImage,
   mainColor,

@@ -1,9 +1,5 @@
 import styled from '@emotion/styled'
-import {
-  subColor_Dark,
-  subColor_light,
-  subColor_lighter,
-} from 'components/styledComponent'
+import { subColor_Dark, subColor_light } from 'components/styledComponent'
 
 export default function UploadCaveat({
   manage,
@@ -13,7 +9,7 @@ export default function UploadCaveat({
   picture?: boolean
 }) {
   return (
-    <CaveatDiv>
+    <Container>
       {picture ? (
         <>
           - 사진은 가로로 찍은 사진을 권장합니다.
@@ -36,18 +32,16 @@ export default function UploadCaveat({
           )}
         </>
       )}
-    </CaveatDiv>
+    </Container>
   )
 }
 
-const CaveatDiv = styled.div`
+const Container = styled.div`
   color: ${subColor_Dark} !important;
   background-color: ${subColor_light};
-  width: 100%;
   line-height: 2;
   font-size: 14px;
   padding: 1rem;
-  margin: 1rem;
   display: flex;
   border-radius: 5px;
 `

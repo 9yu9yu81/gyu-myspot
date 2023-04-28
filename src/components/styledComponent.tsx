@@ -17,6 +17,9 @@ export const Center_Div = styled.div`
   justify-content: center;
   align-items: center;
 `
+export const CenterCol = styled(Center_Div)`
+  flex-flow: column;
+`
 export const Center2_Div = styled.div`
   display: flex;
   align-items: center;

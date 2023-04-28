@@ -1,16 +1,17 @@
 import { useEffect } from 'react'
-import { Center_Div } from './styledComponent'
 
 export default function Map({
   width,
   height,
   address,
   level,
+  fill,
 }: {
-  width: string
-  height: string
+  width?: string
+  height?: string
   address?: string
   level?: number
+  fill?: boolean
 }) {
   const onLoadKakaoMap = () => {
     window.kakao.maps.load(() => {
@@ -58,7 +59,15 @@ export default function Map({
 
   return (
     <>
-      <Center_Div>
+      {fill ? (
+        <div
+          id="map"
+          style={{
+            width: '100%',
+            height: '100%',
+          }}
+        ></div>
+      ) : (
         <div
           id="map"
           style={{
@@ -66,7 +75,7 @@ export default function Map({
             height: height,
           }}
         ></div>
-      </Center_Div>
+      )}
     </>
   )
 }

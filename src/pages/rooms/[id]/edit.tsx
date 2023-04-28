@@ -34,6 +34,7 @@ const CustomSegmentedControl = dynamic(
 )
 const CustomCheckBox = dynamic(import('components/CustomCheckBox'))
 import { Calendar } from '@mantine/dates'
+import { SubBtn } from 'pages/upload'
 
 const DESCRIPTION_PLACEHOLDER = `[상세설명 작성 주의사항]
 - 매물 정보와 관련없는 홍보성 정보는 입력할 수 없습니다.
@@ -472,9 +473,13 @@ export default function RoomEdit(room: RoomAllData) {
                   value={addr}
                   onChange={(e) => setAddr(e.target.value)}
                 />
-                <Upload_Btn_Submit onClick={loadLayout} ref={postcodeButtonRef}>
+                <SubBtn
+                  className="dark"
+                  onClick={loadLayout}
+                  ref={postcodeButtonRef}
+                >
                   주소 검색
-                </Upload_Btn_Submit>
+                </SubBtn>
               </Center_Div2>
               <Upload_Textarea1
                 placeholder={DETAILADDR_PLACEHOLDER}
@@ -844,7 +849,9 @@ export default function RoomEdit(room: RoomAllData) {
           <div style={{ minWidth: '1000px', padding: '20px' }}>
             <FileButton accept="image/*" multiple onChange={setFiles}>
               {(props) => (
-                <Upload_Btn_Submit {...props}>사진 추가하기</Upload_Btn_Submit>
+                <SubBtn className="dark" {...props}>
+                  사진 추가하기
+                </SubBtn>
               )}
             </FileButton>
             <div className="items-center mt-5 flex flex-wrap bg-zinc-100 pt-5 pb-5">
@@ -884,13 +891,14 @@ export default function RoomEdit(room: RoomAllData) {
         <Upload_Btn_Outline onClick={() => router.back()}>
           취소
         </Upload_Btn_Outline>
-        <Upload_Btn_Submit
+        <SubBtn
+          className="dark"
           onClick={() => {
             validate('submit')
           }}
         >
           수정하기
-        </Upload_Btn_Submit>
+        </SubBtn>
       </Center_Div>
     </div>
   ) : (
@@ -899,16 +907,8 @@ export default function RoomEdit(room: RoomAllData) {
 }
 
 const fontsize: number = 14
-const Upload_Btn_Medium = styled.button`
-  width: 100px;
-  height: 40px;
-  font-size: 12px;
-`
-export const Upload_Btn_Submit = styled(Upload_Btn_Medium)`
-  color: ${subColor_lighter};
-  background-color: ${mainColor};
-`
-export const Upload_Btn_Outline = styled(Upload_Btn_Medium)`
+
+export const Upload_Btn_Outline = styled(SubBtn)`
   color: ${mainColor};
   border: 0.5px solid ${subColor_medium};
 `
